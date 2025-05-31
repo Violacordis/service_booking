@@ -1,13 +1,13 @@
 {
   "name": "service-booking-app",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js",
-    "start:dev": "nodemon index.js",
-    "prisma:generate": "npx prisma generate",
-    "prisma:migrate": "npx prisma migrate dev ",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "build": "prisma generate",
+    "start": "npm run build && node server.js",
+    "dev": "npm run build && nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -15,10 +15,11 @@
   "description": "",
   "dependencies": {
     "@prisma/client": "^6.8.2",
-    "express": "^5.1.0",
-    "prisma": "^6.8.2"
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0"
   },
   "devDependencies": {
+    "prisma": "^6.8.2",
     "nodemon": "^3.1.10"
   }
 }

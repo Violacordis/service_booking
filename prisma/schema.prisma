@@ -13,3 +13,108 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Service {
+  id            String                   @id @default(uuid()) @db.Uuid
+  name          String                   @db.VarChar(255)
+  code          String                   @unique
+  description   String?                  @db.VarChar(255)
+  status        Boolean                  @default(true)
+  branchId      String                   @db.Uuid
+  createdAt     DateTime                 @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime                 @default(now()) @updatedAt @db.Timestamp(6)
+  createdBy     String?                  @db.VarChar(255)
+  updatedBy     String?                  @db.VarChar(255)
+  categories    ServiceCategory[]
+
+  branch        Branch                   @relation(fields: [branchId], references: [id])
+
+  @@index([code])
+  @@index([branchId])
+  @@map("services")
+
+}
+
+model ServiceCategory {
+  id            String                   @id @default(uuid()) @db.Uuid
+  serviceId     String                   @db.Uuid
+  name          String                   @db.VarChar(255)
+  code          String                   @unique
+  description   String?                  @db.VarChar(255)
+  type          ServiceCategoryType      @default(BASIC)
+  price         Float                    @default(0.0)
+  estimatedTime Int?                     @db.Integer        // in minutes
+  status        Boolean                  @default(true)
+  createdAt     DateTime                 @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime                 @default(now()) @updatedAt @db.Timestamp(6)
+  createdBy     String?                  @db.VarChar(255)
+  updatedBy     String?                  @db.VarChar(255)
+
+  service       Service                  @relation(fields: [serviceId], references: [id])
+  specialists   Specialists[]
+
+  @@index([code])
+  @@map("service_categories")
+}
+
+enum ServiceCategoryType {
+  BASIC
+  STANDARD
+  PREMIUM  
+}
+
+model Branch {
+  id            String                   @id @default(uuid()) @db.Uuid
+  name          String                   @db.VarChar(255)
+  address       String?                  @db.VarChar(255)
+  city          String?                  @db.VarChar(255)
+  state         String?                  @db.VarChar(255)
+  country       String?                  @db.VarChar(255)
+  status        Boolean                  @default(true)
+  createdAt     DateTime                 @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime                 @default(now()) @updatedAt @db.Timestamp(6)
+  createdBy     String?                  @db.VarChar(255)
+  updatedBy     String?                  @db.VarChar(255)
+
+  services      Service[]
+
+
+  @@map("branches")
+}
+
+model Specialists {
+  id            String                   @id @default(uuid()) @db.Uuid
+  name          String                   @db.VarChar(255)
+  email         String?                  @unique @db.VarChar(255)
+  phone         String?                  @unique @db.VarChar(20)
+  age           Int?
+  status        Boolean                  @default(true)
+  createdAt     DateTime                 @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime                 @default(now()) @updatedAt @db.Timestamp(6)
+  createdBy     String?                  @db.VarChar(255)
+  updatedBy     String?                  @db.VarChar(255)
+
+  specialties   ServiceCategory[]
+
+ 
+  @@index([email])
+  @@index([phone])
+  @@map("specialists")
+}
+
+model User {
+  id            String                   @id @default(uuid()) @db.Uuid
+  email         String                   @unique @db.VarChar(255)
+  password      String?                  @db.VarChar(255)    //optional for guests
+  firstName     String                   @db.VarChar(255)
+  lastName      String                   @db.VarChar(255)
+  address       String?                  @db.VarChar(255) 
+  phone         String?                  @unique @db.VarChar(20)
+  status        Boolean                  @default(true)
+  isGuest       Boolean                  @default(false) // true if the user is a guest
+  createdAt     DateTime                 @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime                 @default(now()) @updatedAt @db.Timestamp(6)
+
+  @@index([email])
+  @@map("users")
+}
