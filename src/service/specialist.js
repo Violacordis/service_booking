@@ -68,3 +68,101 @@ exports.addSpecialist = async (req, res, next) => {
     });
   }
 };
+
+exports.getSpecialists = async (req, res) => {
+  const {
+    page = 1,
+    limit = 10,
+    term,
+    branchId,
+    status,
+    categoryId,
+    sortBy = "createdAt",
+  } = req.query;
+
+  const filters = {};
+
+  if (term) {
+    filters.OR = [
+      { name: { contains: term, mode: "insensitive" } },
+      { email: { contains: term, mode: "insensitive" } },
+      { phone: { contains: term, mode: "insensitive" } },
+      {
+        specialties: {
+          some: { category: { name: { contains: term, mode: "insensitive" } } },
+        },
+      },
+    ];
+  }
+
+  if (status !== undefined) {
+    filters.status = status === "true";
+  }
+
+  if (branchId) {
+    filters.specialties = {
+      branchId,
+    };
+  }
+
+  if (categoryId) {
+    filters.specialties = {
+      some: {
+        categoryId,
+      },
+    };
+  }
+
+  try {
+    const [total, specialists] = await Promise.all([
+      await prisma.specialist.count({ where: filters }),
+
+      await prisma.specialist.findMany({
+        where: filters,
+        orderBy: {
+          [sortBy]: "desc",
+        },
+        skip: (page - 1) * limit,
+        take: parseInt(limit),
+        orderBy: { createdAt: "desc" },
+        include: {
+          specialties: {
+            select: {
+              category: {
+                select: {
+                  id: true,
+                  name: true,
+                  type: true,
+                  price: true,
+                  estimatedTime: true,
+                  service: {
+                    select: {
+                      id: true,
+                      name: true,
+                      description: true,
+                      branchId: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      }),
+    ]);
+
+    res.json({
+      message: "Specialists fetched successfully",
+      data: specialists,
+      meta: {
+        total,
+        page: parseInt(page),
+        pageSize: parseInt(limit),
+        totalPages: Math.ceil(total / limit),
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching specialists:", error.message);
+    res.status(500).json({ message: "Failed to fetch specialists" });
+  }
+};
