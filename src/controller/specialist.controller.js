@@ -77,7 +77,8 @@ exports.getSpecialists = async (req, res) => {
     term,
     branchId,
     status,
-    categoryId,
+    saviceCategoryId,
+    serviceId,
     sortBy = "createdAt",
   } = req.query;
 
@@ -113,10 +114,20 @@ exports.getSpecialists = async (req, res) => {
     };
   }
 
-  if (categoryId) {
+  if (saviceCategoryId) {
     filters.specialties = {
       some: {
-        categoryId,
+        categoryId: saviceCategoryId,
+      },
+    };
+  }
+
+  if (serviceId) {
+    filters.specialties = {
+      some: {
+        category: {
+          serviceId,
+        },
       },
     };
   }

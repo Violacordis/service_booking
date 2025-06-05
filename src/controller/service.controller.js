@@ -51,3 +51,96 @@ exports.createServices = async (req, res, next) => {
     return res.status(500).json({ message: "Failed to create services" });
   }
 };
+
+exports.getServices = async (req, res) => {
+  const {
+    page = 1,
+    limit = 10,
+    term,
+    branchId,
+    status,
+    sortBy = "createdAt",
+  } = req.query;
+
+  const filters = {};
+
+  if (term) {
+    const searchTerm = term.trim();
+    if (searchTerm) {
+      filters.OR = [
+        { name: { contains: searchTerm, mode: "insensitive" } },
+        {
+          categories: {
+            some: {
+              name: { contains: searchTerm, mode: "insensitive" },
+            },
+          },
+        },
+      ];
+    }
+  }
+
+  if (status !== undefined) {
+    filters.status = status === "true";
+  }
+
+  if (branchId) {
+    filters.specialties = {
+      branchId,
+    };
+  }
+
+  try {
+    const [total, services] = await Promise.all([
+      await prisma.service.count({ where: filters }),
+
+      await prisma.service.findMany({
+        where: filters,
+        skip: (page - 1) * limit,
+        take: parseInt(limit),
+        orderBy: { [sortBy]: "desc" },
+        include: {
+          categories: {
+            select: {
+              id: true,
+              name: true,
+              type: true,
+              price: true,
+              estimatedTime: true,
+              specialists: {
+                select: {
+                  id: true,
+                  specialistId: true,
+                  categoryId: true,
+                  specialist: {
+                    select: {
+                      id: true,
+                      name: true,
+                      email: true,
+                      phone: true,
+                      status: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      }),
+    ]);
+
+    res.json({
+      message: "Services fetched successfully",
+      data: services,
+      meta: {
+        total,
+        page: parseInt(page),
+        pageSize: parseInt(limit),
+        totalPages: Math.ceil(total / limit),
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching services:", error.message);
+    res.status(500).json({ message: "Failed to fetch services" });
+  }
+};
