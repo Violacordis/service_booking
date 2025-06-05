@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { addSpecialist, getSpecialists } = require("../service/specialist.js");
+const {
+  addSpecialist,
+  getSpecialists,
+} = require("../controller/specialist.controller.js");
 const validate = require("../middleware/validate.js");
 const {
   createSpecialistSchema,

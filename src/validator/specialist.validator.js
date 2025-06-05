@@ -58,6 +58,7 @@ const getSpecialistsQuerySchema = Joi.object({
 
   status: Joi.boolean().optional(),
   branchId: Joi.string().uuid().optional(),
+  categoryId: Joi.string().uuid().optional(),
   sortBy: Joi.string().valid("name", "email", "createdAt").default("createdAt"),
   term: Joi.string().optional(),
 });

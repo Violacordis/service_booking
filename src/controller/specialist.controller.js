@@ -1,3 +1,4 @@
+const { Prisma } = require("@prisma/client");
 const prisma = require("../../db/prisma.js");
 
 exports.addSpecialist = async (req, res, next) => {
@@ -83,16 +84,23 @@ exports.getSpecialists = async (req, res) => {
   const filters = {};
 
   if (term) {
-    filters.OR = [
-      { name: { contains: term, mode: "insensitive" } },
-      { email: { contains: term, mode: "insensitive" } },
-      { phone: { contains: term, mode: "insensitive" } },
-      {
-        specialties: {
-          some: { category: { name: { contains: term, mode: "insensitive" } } },
+    const searchTerm = term.trim();
+    if (searchTerm) {
+      filters.OR = [
+        { name: { contains: searchTerm, mode: "insensitive" } },
+        { email: { contains: searchTerm, mode: "insensitive" } },
+        { phone: { contains: searchTerm, mode: "insensitive" } },
+        {
+          specialties: {
+            some: {
+              category: {
+                name: { contains: searchTerm, mode: "insensitive" },
+              },
+            },
+          },
         },
-      },
-    ];
+      ];
+    }
   }
 
   if (status !== undefined) {
@@ -119,12 +127,9 @@ exports.getSpecialists = async (req, res) => {
 
       await prisma.specialist.findMany({
         where: filters,
-        orderBy: {
-          [sortBy]: "desc",
-        },
         skip: (page - 1) * limit,
         take: parseInt(limit),
-        orderBy: { createdAt: "desc" },
+        orderBy: { [sortBy]: "desc" },
         include: {
           specialties: {
             select: {
