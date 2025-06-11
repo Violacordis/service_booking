@@ -1,0 +1,104 @@
+[2025-06-11 06:01:52] [31m[1merror[22m[39m : [31m[1m[Handled] Route not found[22m[39m
+[2025-06-11 06:13:25] [31m[1merror[22m[39m : [31m[1m[Handled] Invalid request: 'branches' must be a non-empty array[22m[39m
+[2025-06-11 06:15:55] [31m[1merror[22m[39m : [31m[1m[Handled] Route not found[22m[39m
+[2025-06-11 06:16:28] [31m[1merror[22m[39m : [31m[1m[Handled] Route not found[22m[39m
+[2025-06-11 06:17:20] [31m[1merror[22m[39m : [31m[1m[Handled] Route not found[22m[39m
+[2025-06-11 06:17:52] [31m[1merror[22m[39m : [31m[1m[Handled] Route not found[22m[39m
+[2025-06-11 06:22:41] [31m[1merror[22m[39m : [31m[1m[Handled] Route not found[22m[39m
+[2025-06-11 06:30:17] [31m[1merror[22m[39m : [31m[1m[Unhandled] Cannot set property query of #<IncomingMessage> which has only a getter - Cannot set property query of #<IncomingMessage> which has only a getter[22m[39m
+[2025-06-11 06:31:59] [31m[1merror[22m[39m : [31m[1m[Unhandled] Cannot set property query of #<IncomingMessage> which has only a getter - Cannot set property query of #<IncomingMessage> which has only a getter[22m[39m
+[2025-06-11 06:36:25] [31m[1merror[22m[39m : [31m[1m[Handled] Route not found[22m[39m
+[2025-06-11 06:37:09] [31m[1merror[22m[39m : [31m[1m[Handled] Route not found[22m[39m
+[2025-06-11 06:37:20] [31m[1merror[22m[39m : [31m[1m[Handled] Route not found[22m[39m
+[2025-06-11 06:37:56] [31m[1merror[22m[39m : [31m[1m[Handled] Route not found[22m[39m
+[2025-06-11 06:46:25] [31m[1merror[22m[39m : [31m[1m[Handled] Route not found[22m[39m
+[2025-06-11 06:56:45] [31m[1merror[22m[39m : [31m[1mError fetching specialists: - [22m[39m
+[31m[1mInvalid `prismaService.specialist.findMany()` invocation in[22m[39m
+[31m[1mC:\Users\Admin\OneDrive\Documents\service-booking-app\src\specialist\specialist.service.ts:155:34[22m[39m
+
+[31m[1m  152 [22m[39m
+[31m[1m  153 const [total, specialists] = await Promise.all([[22m[39m
+[31m[1m  154   prismaService.specialist.count({ where: filters }),[22m[39m
+[31m[1m→ 155   prismaService.specialist.findMany({[22m[39m
+[31m[1m          where: {[22m[39m
+[31m[1m            OR: [[22m[39m
+[31m[1m              {[22m[39m
+[31m[1m                name: {[22m[39m
+[31m[1m                  contains: "Zee morn",[22m[39m
+[31m[1m                  mode: "insensitive"[22m[39m
+[31m[1m                }[22m[39m
+[31m[1m              },[22m[39m
+[31m[1m              {[22m[39m
+[31m[1m                email: {[22m[39m
+[31m[1m                  contains: "Zee morn",[22m[39m
+[31m[1m                  mode: "insensitive"[22m[39m
+[31m[1m                }[22m[39m
+[31m[1m              },[22m[39m
+[31m[1m              {[22m[39m
+[31m[1m                phone: {[22m[39m
+[31m[1m                  contains: "Zee morn",[22m[39m
+[31m[1m                  mode: "insensitive"[22m[39m
+[31m[1m                }[22m[39m
+[31m[1m              },[22m[39m
+[31m[1m              {[22m[39m
+[31m[1m                specialties: {[22m[39m
+[31m[1m                  some: {[22m[39m
+[31m[1m                    category: {[22m[39m
+[31m[1m                      name: {[22m[39m
+[31m[1m                        contains: "Zee morn",[22m[39m
+[31m[1m                        mode: "insensitive"[22m[39m
+[31m[1m                      }[22m[39m
+[31m[1m                    }[22m[39m
+[31m[1m                  }[22m[39m
+[31m[1m                }[22m[39m
+[31m[1m              }[22m[39m
+[31m[1m            ],[22m[39m
+[31m[1m            specialties: {[22m[39m
+[31m[1m              some: {[22m[39m
+[31m[1m                category: {[22m[39m
+[31m[1m                  serviceId: "7beb345d-c6ee-4a48-b1b8-d33bf1c8aaf4"[22m[39m
+[31m[1m                }[22m[39m
+[31m[1m              }[22m[39m
+[31m[1m            }[22m[39m
+[31m[1m          },[22m[39m
+[31m[1m          skip: 0,[22m[39m
+[31m[1m          take: "10",[22m[39m
+[31m[1m                ~~~~[22m[39m
+[31m[1m          orderBy: {[22m[39m
+[31m[1m            createdAt: "desc"[22m[39m
+[31m[1m          },[22m[39m
+[31m[1m          include: {[22m[39m
+[31m[1m            specialties: {[22m[39m
+[31m[1m              select: {[22m[39m
+[31m[1m                id: true,[22m[39m
+[31m[1m                category: {[22m[39m
+[31m[1m                  select: {[22m[39m
+[31m[1m                    id: true,[22m[39m
+[31m[1m                    name: true,[22m[39m
+[31m[1m                    type: true,[22m[39m
+[31m[1m                    price: true,[22m[39m
+[31m[1m                    estimatedTime: true,[22m[39m
+[31m[1m                    service: {[22m[39m
+[31m[1m                      select: {[22m[39m
+[31m[1m                        id: true,[22m[39m
+[31m[1m                        name: true,[22m[39m
+[31m[1m                        description: true,[22m[39m
+[31m[1m                        branchId: true[22m[39m
+[31m[1m                      }[22m[39m
+[31m[1m                    }[22m[39m
+[31m[1m                  }[22m[39m
+[31m[1m                }[22m[39m
+[31m[1m              }[22m[39m
+[31m[1m            }[22m[39m
+[31m[1m          }[22m[39m
+[31m[1m        })[22m[39m
+
+[31m[1mArgument `take`: Invalid value provided. Expected Int, provided String.[22m[39m
+[2025-06-11 06:56:45] [31m[1merror[22m[39m : [31m[1m[Handled] Failed to fetch specialists[22m[39m
+[2025-06-11 06:59:11] [31m[1merror[22m[39m : [31m[1m[Handled] Invalid request: 'branches' must be a non-empty array[22m[39m
+[2025-06-11 07:07:14] [31m[1merror[22m[39m : [31m[1mError creating branches: - Invalid request: 'services' must be a non-empty array[22m[39m
+[2025-06-11 07:07:14] [31m[1merror[22m[39m : [31m[1m[Handled] Failed to create services![22m[39m
+[2025-06-11 15:59:42] [31m[1merror[22m[39m : [31m[1m[Unhandled] this.specialistService.createSpecialist is not a function - this.specialistService.createSpecialist is not a function[22m[39m
+[2025-06-11 16:00:30] [31m[1merror[22m[39m : [31m[1m[Handled] Invalid request: 'specialists' must be a non-empty array[22m[39m
+[2025-06-11 16:02:17] [31m[1merror[22m[39m : [31m[1m[Handled] Invalid request: 'specialists' must be a non-empty array[22m[39m
+[2025-06-11 16:05:36] [31m[1merror[22m[39m : [31m[1m[Handled] Invalid request: 'specialists' must be a non-empty array[22m[39m

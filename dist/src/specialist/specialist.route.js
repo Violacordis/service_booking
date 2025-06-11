@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const validate_middleware_1 = require("../common/middleware/validate.middleware");
+const specialist_controller_1 = require("./specialist.controller");
+const specialist_validator_1 = require("./specialist.validator");
+const routes = (0, express_1.Router)();
+const controller = new specialist_controller_1.SpecialistController();
+routes.post("/specialists", (0, validate_middleware_1.validate)(specialist_validator_1.createSpecialistSchema), controller.addSpecialists);
+routes.get("/specialists", (0, validate_middleware_1.validate)(specialist_validator_1.getSpecialistsQuerySchema), controller.getSpecialists);
+module.exports = routes;
