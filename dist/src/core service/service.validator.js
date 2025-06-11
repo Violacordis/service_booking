@@ -26,21 +26,34 @@ const serviceSchema = zod_1.z.object({
         .array(categorySchema)
         .min(1, "At least one category is required"),
 });
-const createServicesSchema = zod_1.z
-    .array(serviceSchema)
-    .min(1, "At least one service is required");
+const createServicesSchema = zod_1.z.object({
+    services: zod_1.z.array(serviceSchema).min(1, "At least one service is required"),
+});
 exports.createServicesSchema = createServicesSchema;
 const getServicesQuerySchema = zod_1.z.object({
-    page: zod_1.z.number().int().min(1, "Page must be at least 1").default(1),
+    page: zod_1.z
+        .string()
+        .transform((val) => parseInt(val, 10))
+        .pipe(zod_1.z.number().int().min(1, "Page must be at least 1"))
+        .default("1"),
     limit: zod_1.z
+        .string()
+        .transform((val) => parseInt(val, 10))
+        .pipe(zod_1.z
         .number()
         .int()
         .min(1, "Limit must be at least 1")
-        .max(100, "Limit cannot exceed 100")
-        .default(10),
-    status: zod_1.z.boolean().optional(),
+        .max(100, "Limit cannot exceed 100"))
+        .default("10"),
+    status: zod_1.z
+        .string()
+        .transform((val) => val === "true")
+        .optional(),
     branchId: zod_1.z.string().uuid("Invalid branch ID").optional(),
-    sortBy: zod_1.z.enum(["name", "email", "createdAt"]).default("createdAt"),
+    sortBy: zod_1.z
+        .enum(["name", "email", "createdAt"])
+        .optional()
+        .default("createdAt"),
     term: zod_1.z.string().optional(),
 });
 exports.getServicesQuerySchema = getServicesQuerySchema;

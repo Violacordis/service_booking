@@ -11,7 +11,7 @@ class BranchController {
         };
         this.fetchBranches = async (req, res) => {
             const data = await this.branchService.getBranches({
-                query: req.query,
+                query: req.validated,
             });
             res.json(data);
         };

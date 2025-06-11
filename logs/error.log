@@ -102,3 +102,11 @@
 [2025-06-11 16:00:30] [31m[1merror[22m[39m : [31m[1m[Handled] Invalid request: 'specialists' must be a non-empty array[22m[39m
 [2025-06-11 16:02:17] [31m[1merror[22m[39m : [31m[1m[Handled] Invalid request: 'specialists' must be a non-empty array[22m[39m
 [2025-06-11 16:05:36] [31m[1merror[22m[39m : [31m[1m[Handled] Invalid request: 'specialists' must be a non-empty array[22m[39m
+[2025-06-11 21:38:28] [31m[1merror[22m[39m : [31m[1m[Handled] User already exists[22m[39m
+[2025-06-11 21:55:26] [31m[1merror[22m[39m : [31m[1m[Handled] Invalid credentials[22m[39m
+[2025-06-11 21:55:33] [31m[1merror[22m[39m : [31m[1m[Handled] Invalid credentials[22m[39m
+[2025-06-11 21:55:42] [31m[1merror[22m[39m : [31m[1m[Handled] Invalid credentials[22m[39m
+[2025-06-11 21:59:41] [31m[1merror[22m[39m : [31m[1m[Handled] Unauthorized![22m[39m
+[2025-06-11 22:01:45] [31m[1merror[22m[39m : [31m[1m[Handled] Unauthorized![22m[39m
+[2025-06-11 22:03:02] [31m[1merror[22m[39m : [31m[1m[Handled] Unauthorized![22m[39m
+[2025-06-11 22:04:11] [31m[1merror[22m[39m : [31m[1m[Handled] Unauthorized![22m[39m

@@ -1,15 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSpecialistsQuerySchema = exports.createSpecialistSchema = void 0;
+exports.getSpecialistsQuerySchema = exports.createSpecialistsSchema = void 0;
 const zod_1 = require("zod");
 const createSpecialistSchema = zod_1.z.object({
     name: zod_1.z.string().min(1, { message: "Name is required" }),
     email: zod_1.z.string().email({ message: "Email must be a valid email address" }),
     phone: zod_1.z.string().optional(),
     age: zod_1.z
-        .number()
-        .int({ message: "Age must be a number" })
-        .min(18, { message: "Age must be at least 18" })
+        .union([
+        zod_1.z
+            .string()
+            .transform((val) => parseInt(val, 10))
+            .pipe(zod_1.z.number().int({ message: "Age must be a number" })),
+        zod_1.z.number().int({ message: "Age must be a number" }),
+    ])
         .optional(),
     address: zod_1.z.string().optional(),
     city: zod_1.z.string().optional(),
@@ -25,25 +29,36 @@ const createSpecialistSchema = zod_1.z.object({
         .array(zod_1.z.string().uuid({ message: "Each category ID must be a valid UUID" }))
         .min(1, { message: "At least one category ID is required" }),
 });
-exports.createSpecialistSchema = createSpecialistSchema;
+const createSpecialistsSchema = zod_1.z.object({
+    specialists: zod_1.z
+        .array(createSpecialistSchema)
+        .min(1, { message: "At least one specialist is required" }),
+});
+exports.createSpecialistsSchema = createSpecialistsSchema;
 const getSpecialistsQuerySchema = zod_1.z.object({
     page: zod_1.z
-        .number()
-        .int()
-        .min(1, { message: "Page must be at least 1" })
-        .default(1),
+        .string()
+        .transform((val) => parseInt(val, 10))
+        .pipe(zod_1.z.number().int().min(1, { message: "Page must be at least 1" }))
+        .default("1"),
     limit: zod_1.z
+        .string()
+        .transform((val) => parseInt(val, 10))
+        .pipe(zod_1.z
         .number()
         .int()
         .min(1, { message: "Limit must be at least 1" })
-        .max(100, { message: "Limit cannot exceed 100" })
-        .default(10),
-    status: zod_1.z.boolean().optional(),
+        .max(100, { message: "Limit cannot exceed 100" }))
+        .default("10"),
+    status: zod_1.z
+        .string()
+        .transform((val) => val === "true")
+        .optional(),
     branchId: zod_1.z
         .string()
         .uuid({ message: "Branch ID must be a valid UUID" })
         .optional(),
-    saviceCategoryId: zod_1.z
+    serviceCategoryId: zod_1.z
         .string()
         .uuid({ message: "Service Category ID must be a valid UUID" })
         .optional(),
@@ -55,6 +70,7 @@ const getSpecialistsQuerySchema = zod_1.z.object({
         .enum(["name", "email", "createdAt"], {
         message: "SortBy must be one of 'name', 'email', or 'createdAt'",
     })
+        .optional()
         .default("createdAt"),
     term: zod_1.z.string().optional(),
 });

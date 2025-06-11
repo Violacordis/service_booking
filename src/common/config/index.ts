@@ -28,6 +28,10 @@ const config = {
   db: {
     url: env.require("DATABASE_URL"),
   },
+  jwt: {
+    secret: env.require("JWT_SECRET"),
+    expiresIn: env("JWT_EXPIRES_IN", "1h"),
+  },
   redis: {
     host: env("REDIS_HOST", "localhost"),
     port: Number(env("REDIS_PORT")),

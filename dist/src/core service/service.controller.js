@@ -11,7 +11,7 @@ class CoreServiceController {
         };
         this.getServices = async (req, res) => {
             const data = await this.coreService.getServices({
-                query: req.query,
+                query: req.validated,
             });
             res.json(data);
         };

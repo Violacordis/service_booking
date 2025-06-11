@@ -6,12 +6,12 @@ class SpecialistController {
     constructor() {
         this.specialistService = new specialist_service_1.SpecialistService();
         this.addSpecialists = async (req, res) => {
-            const data = await this.specialistService.createSpecialist(req.body);
+            const data = await this.specialistService.addSpecialists(req.body.specialists);
             res.json(data);
         };
         this.getSpecialists = async (req, res) => {
             const data = await this.specialistService.getSpecialists({
-                query: req.query,
+                query: req.validated,
             });
             res.json(data);
         };

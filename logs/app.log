@@ -833,3 +833,337 @@
 [32m  "serviceId": "7beb345d-c6ee-4a48-b1b8-d33bf1c8aaf4"[39m
 [32m}[39m
 [2025-06-11 16:54:28] [35mhttp[39m : [35m[35mGET[35m [37m/api/v1/specialists?page=1&limit=10&term=Zee%20morn&serviceId=7beb345d-c6ee-4a48-b1b8-d33bf1c8aaf4[35m [32m200[35m [90m52.027 ms[35m[39m
+[2025-06-11 19:28:13] [36mdebug[39m : [36m✅ Connected to database via Prisma[39m
+[2025-06-11 19:28:13] [36mdebug[39m : [36m🚀 App started in development mode on port 2017[39m
+[2025-06-11 19:28:21] [32minfo[39m : [32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[39m
+[2025-06-11 19:28:21] [32minfo[39m : [32mheaders --> {[39m
+[32m  "content-type": "text/plain",[39m
+[32m  "user-agent": "PostmanRuntime/7.44.0",[39m
+[32m  "accept": "*/*",[39m
+[32m  "postman-token": "21f9b6e4-0b9c-4232-bb4a-926851870097",[39m
+[32m  "host": "localhost:2017",[39m
+[32m  "accept-encoding": "gzip, deflate, br",[39m
+[32m  "connection": "keep-alive",[39m
+[32m  "content-length": "448"[39m
+[32m}[39m
+[2025-06-11 19:28:21] [32minfo[39m : [32mquery --> {[39m
+[32m  "page": "1",[39m
+[32m  "limit": "10",[39m
+[32m  "term": "Zee morn",[39m
+[32m  "serviceId": "7beb345d-c6ee-4a48-b1b8-d33bf1c8aaf4"[39m
+[32m}[39m
+[2025-06-11 19:28:21] [35mhttp[39m : [35m[35mGET[35m [37m/api/v1/specialists?page=1&limit=10&term=Zee%20morn&serviceId=7beb345d-c6ee-4a48-b1b8-d33bf1c8aaf4[35m [32m200[35m [90m158.620 ms[35m[39m
+[2025-06-11 19:50:54] [36mdebug[39m : [36m✅ Connected to database via Prisma[39m
+[2025-06-11 19:50:54] [36mdebug[39m : [36m🚀 App started in development mode on port 2017[39m
+[2025-06-11 20:44:23] [36mdebug[39m : [36m✅ Connected to database via Prisma[39m
+[2025-06-11 20:44:23] [36mdebug[39m : [36m🚀 App started in development mode on port 2017[39m
+[2025-06-11 20:44:45] [36mdebug[39m : [36m✅ Connected to database via Prisma[39m
+[2025-06-11 20:44:45] [36mdebug[39m : [36m🚀 App started in development mode on port 2017[39m
+[2025-06-11 21:28:34] [36mdebug[39m : [36m✅ Connected to database via Prisma[39m
+[2025-06-11 21:28:34] [36mdebug[39m : [36m🚀 App started in development mode on port 2017[39m
+[2025-06-11 21:28:55] [36mdebug[39m : [36m✅ Connected to database via Prisma[39m
+[2025-06-11 21:28:55] [36mdebug[39m : [36m🚀 App started in development mode on port 2017[39m
+[2025-06-11 21:32:56] [32minfo[39m : [32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[39m
+[2025-06-11 21:32:56] [32minfo[39m : [32mheaders --> {[39m
+[32m  "content-type": "application/json",[39m
+[32m  "user-agent": "PostmanRuntime/7.44.0",[39m
+[32m  "accept": "*/*",[39m
+[32m  "postman-token": "0584586b-01d8-4423-b45b-642720de1622",[39m
+[32m  "host": "localhost:2017",[39m
+[32m  "accept-encoding": "gzip, deflate, br",[39m
+[32m  "connection": "keep-alive",[39m
+[32m  "content-length": "204"[39m
+[32m}[39m
+[2025-06-11 21:32:56] [32minfo[39m : [32mbody --> [object Object][39m
+[2025-06-11 21:32:56] [35mhttp[39m : [35m[35mPOST[35m [37m/api/v1/auth/signup[35m [32m200[35m [90m119.603 ms[35m[39m
+[2025-06-11 21:37:08] [36mdebug[39m : [36m✅ Connected to database via Prisma[39m
+[2025-06-11 21:37:08] [36mdebug[39m : [36m🚀 App started in development mode on port 2017[39m
+[2025-06-11 21:37:43] [36mdebug[39m : [36m✅ Connected to database via Prisma[39m
+[2025-06-11 21:37:43] [36mdebug[39m : [36m🚀 App started in development mode on port 2017[39m
+[2025-06-11 21:38:10] [32minfo[39m : [32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[39m
+[2025-06-11 21:38:10] [32minfo[39m : [32mheaders --> {[39m
+[32m  "content-type": "application/json",[39m
+[32m  "user-agent": "PostmanRuntime/7.44.0",[39m
+[32m  "accept": "*/*",[39m
+[32m  "postman-token": "b81630f4-fde6-40d7-aa3c-88553f3b74eb",[39m
+[32m  "host": "localhost:2017",[39m
+[32m  "accept-encoding": "gzip, deflate, br",[39m
+[32m  "connection": "keep-alive",[39m
+[32m  "content-length": "204"[39m
+[32m}[39m
+[2025-06-11 21:38:10] [32minfo[39m : [32mbody --> [object Object][39m
+[2025-06-11 21:38:10] [35mhttp[39m : [35m[35mPOST[35m [37m/api/v1/auth/signup[35m [32m200[35m [90m70.349 ms[35m[39m
+[2025-06-11 21:38:28] [32minfo[39m : [32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[39m
+[2025-06-11 21:38:28] [32minfo[39m : [32mheaders --> {[39m
+[32m  "content-type": "application/json",[39m
+[32m  "user-agent": "PostmanRuntime/7.44.0",[39m
+[32m  "accept": "*/*",[39m
+[32m  "postman-token": "23dabc1b-ffa7-4055-9968-a3b3327dd935",[39m
+[32m  "host": "localhost:2017",[39m
+[32m  "accept-encoding": "gzip, deflate, br",[39m
+[32m  "connection": "keep-alive",[39m
+[32m  "content-length": "204"[39m
+[32m}[39m
+[2025-06-11 21:38:28] [32minfo[39m : [32mbody --> [object Object][39m
+[2025-06-11 21:38:28] [31m[1merror[22m[39m : [31m[1m[Handled] User already exists[22m[39m
+[2025-06-11 21:38:28] [35mhttp[39m : [35m[35mPOST[35m [37m/api/v1/auth/signup[35m [33m409[35m [90m3.373 ms[35m[39m
+[2025-06-11 21:38:55] [32minfo[39m : [32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[39m
+[2025-06-11 21:38:55] [32minfo[39m : [32mheaders --> {[39m
+[32m  "content-type": "application/json",[39m
+[32m  "user-agent": "PostmanRuntime/7.44.0",[39m
+[32m  "accept": "*/*",[39m
+[32m  "postman-token": "20121b04-b47d-495e-b478-9a81e9aa26d4",[39m
+[32m  "host": "localhost:2017",[39m
+[32m  "accept-encoding": "gzip, deflate, br",[39m
+[32m  "connection": "keep-alive",[39m
+[32m  "content-length": "204"[39m
+[32m}[39m
+[2025-06-11 21:38:55] [32minfo[39m : [32mbody --> [object Object][39m
+[2025-06-11 21:38:55] [35mhttp[39m : [35m[35mPOST[35m [37m/api/v1/auth/signup[35m [32m200[35m [90m78.814 ms[35m[39m
+[2025-06-11 21:46:27] [32minfo[39m : [32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[39m
+[2025-06-11 21:46:27] [32minfo[39m : [32mheaders --> {[39m
+[32m  "content-type": "application/json",[39m
+[32m  "user-agent": "PostmanRuntime/7.44.0",[39m
+[32m  "accept": "*/*",[39m
+[32m  "postman-token": "64540941-7978-4899-b6cb-ac1b2dcdcdc0",[39m
+[32m  "host": "localhost:2017",[39m
+[32m  "accept-encoding": "gzip, deflate, br",[39m
+[32m  "connection": "keep-alive",[39m
+[32m  "content-length": "70"[39m
+[32m}[39m
+[2025-06-11 21:46:27] [32minfo[39m : [32mbody --> [object Object][39m
+[2025-06-11 21:46:27] [35mhttp[39m : [35m[35mPOST[35m [37m/api/v1/auth/login[35m [32m200[35m [90m91.417 ms[35m[39m
+[2025-06-11 21:46:45] [36mdebug[39m : [36m✅ Connected to database via Prisma[39m
+[2025-06-11 21:46:45] [36mdebug[39m : [36m🚀 App started in development mode on port 2017[39m
+[2025-06-11 21:47:10] [36mdebug[39m : [36m✅ Connected to database via Prisma[39m
+[2025-06-11 21:47:10] [36mdebug[39m : [36m🚀 App started in development mode on port 2017[39m
+[2025-06-11 21:55:25] [32minfo[39m : [32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[39m
+[2025-06-11 21:55:25] [32minfo[39m : [32mheaders --> {[39m
+[32m  "content-type": "application/json",[39m
+[32m  "user-agent": "PostmanRuntime/7.44.0",[39m
+[32m  "accept": "*/*",[39m
+[32m  "postman-token": "342b53a6-c440-4848-8c47-40d604280701",[39m
+[32m  "host": "localhost:2017",[39m
+[32m  "accept-encoding": "gzip, deflate, br",[39m
+[32m  "connection": "keep-alive",[39m
+[32m  "content-length": "69"[39m
+[32m}[39m
+[2025-06-11 21:55:25] [32minfo[39m : [32mbody --> [object Object][39m
+[2025-06-11 21:55:26] [31m[1merror[22m[39m : [31m[1m[Handled] Invalid credentials[22m[39m
+[2025-06-11 21:55:26] [35mhttp[39m : [35m[35mPOST[35m [37m/api/v1/auth/login[35m [33m401[35m [90m220.451 ms[35m[39m
+[2025-06-11 21:55:33] [32minfo[39m : [32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[39m
+[2025-06-11 21:55:33] [32minfo[39m : [32mheaders --> {[39m
+[32m  "content-type": "application/json",[39m
+[32m  "user-agent": "PostmanRuntime/7.44.0",[39m
+[32m  "accept": "*/*",[39m
+[32m  "postman-token": "aa3166bd-a77a-4811-b968-41b5b2bf112f",[39m
+[32m  "host": "localhost:2017",[39m
+[32m  "accept-encoding": "gzip, deflate, br",[39m
+[32m  "connection": "keep-alive",[39m
+[32m  "content-length": "68"[39m
+[32m}[39m
+[2025-06-11 21:55:33] [32minfo[39m : [32mbody --> [object Object][39m
+[2025-06-11 21:55:33] [31m[1merror[22m[39m : [31m[1m[Handled] Invalid credentials[22m[39m
+[2025-06-11 21:55:33] [35mhttp[39m : [35m[35mPOST[35m [37m/api/v1/auth/login[35m [33m401[35m [90m2.349 ms[35m[39m
+[2025-06-11 21:55:42] [32minfo[39m : [32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[39m
+[2025-06-11 21:55:42] [32minfo[39m : [32mheaders --> {[39m
+[32m  "content-type": "application/json",[39m
+[32m  "user-agent": "PostmanRuntime/7.44.0",[39m
+[32m  "accept": "*/*",[39m
+[32m  "postman-token": "2a08dff9-83b9-42e8-a080-80c101377b71",[39m
+[32m  "host": "localhost:2017",[39m
+[32m  "accept-encoding": "gzip, deflate, br",[39m
+[32m  "connection": "keep-alive",[39m
+[32m  "content-length": "69"[39m
+[32m}[39m
+[2025-06-11 21:55:42] [32minfo[39m : [32mbody --> [object Object][39m
+[2025-06-11 21:55:42] [31m[1merror[22m[39m : [31m[1m[Handled] Invalid credentials[22m[39m
+[2025-06-11 21:55:42] [35mhttp[39m : [35m[35mPOST[35m [37m/api/v1/auth/login[35m [33m401[35m [90m2.040 ms[35m[39m
+[2025-06-11 21:55:48] [32minfo[39m : [32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[39m
+[2025-06-11 21:55:48] [32minfo[39m : [32mheaders --> {[39m
+[32m  "content-type": "application/json",[39m
+[32m  "user-agent": "PostmanRuntime/7.44.0",[39m
+[32m  "accept": "*/*",[39m
+[32m  "postman-token": "bb94535a-fbb7-42a7-af96-8c1645ada7af",[39m
+[32m  "host": "localhost:2017",[39m
+[32m  "accept-encoding": "gzip, deflate, br",[39m
+[32m  "connection": "keep-alive",[39m
+[32m  "content-length": "68"[39m
+[32m}[39m
+[2025-06-11 21:55:48] [32minfo[39m : [32mbody --> [object Object][39m
+[2025-06-11 21:55:48] [35mhttp[39m : [35m[35mPOST[35m [37m/api/v1/auth/login[35m [33m400[35m [90m1.544 ms[35m[39m
+[2025-06-11 21:56:13] [32minfo[39m : [32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[39m
+[2025-06-11 21:56:13] [32minfo[39m : [32mheaders --> {[39m
+[32m  "content-type": "application/json",[39m
+[32m  "user-agent": "PostmanRuntime/7.44.0",[39m
+[32m  "accept": "*/*",[39m
+[32m  "postman-token": "efc59471-3064-49c9-b6b9-485bdf71def5",[39m
+[32m  "host": "localhost:2017",[39m
+[32m  "accept-encoding": "gzip, deflate, br",[39m
+[32m  "connection": "keep-alive",[39m
+[32m  "content-length": "41"[39m
+[32m}[39m
+[2025-06-11 21:56:13] [32minfo[39m : [32mbody --> [object Object][39m
+[2025-06-11 21:56:13] [35mhttp[39m : [35m[35mPOST[35m [37m/api/v1/auth/login[35m [33m400[35m [90m0.506 ms[35m[39m
+[2025-06-11 21:56:26] [32minfo[39m : [32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[39m
+[2025-06-11 21:56:26] [32minfo[39m : [32mheaders --> {[39m
+[32m  "content-type": "application/json",[39m
+[32m  "user-agent": "PostmanRuntime/7.44.0",[39m
+[32m  "accept": "*/*",[39m
+[32m  "postman-token": "7c6c3a2d-7d46-4f13-b7e3-8f7eea848513",[39m
+[32m  "host": "localhost:2017",[39m
+[32m  "accept-encoding": "gzip, deflate, br",[39m
+[32m  "connection": "keep-alive",[39m
+[32m  "content-length": "70"[39m
+[32m}[39m
+[2025-06-11 21:56:26] [32minfo[39m : [32mbody --> [object Object][39m
+[2025-06-11 21:56:26] [35mhttp[39m : [35m[35mPOST[35m [37m/api/v1/auth/login[35m [32m200[35m [90m60.245 ms[35m[39m
+[2025-06-11 21:58:42] [36mdebug[39m : [36m✅ Connected to database via Prisma[39m
+[2025-06-11 21:58:42] [36mdebug[39m : [36m🚀 App started in development mode on port 2017[39m
+[2025-06-11 21:59:00] [36mdebug[39m : [36m✅ Connected to database via Prisma[39m
+[2025-06-11 21:59:00] [36mdebug[39m : [36m🚀 App started in development mode on port 2017[39m
+[2025-06-11 21:59:30] [36mdebug[39m : [36m✅ Connected to database via Prisma[39m
+[2025-06-11 21:59:30] [36mdebug[39m : [36m🚀 App started in development mode on port 2017[39m
+[2025-06-11 21:59:41] [32minfo[39m : [32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[39m
+[2025-06-11 21:59:41] [32minfo[39m : [32mheaders --> {[39m
+[32m  "user-agent": "PostmanRuntime/7.44.0",[39m
+[32m  "accept": "*/*",[39m
+[32m  "postman-token": "0737243c-83e0-460b-999e-666eee564873",[39m
+[32m  "host": "localhost:2017",[39m
+[32m  "accept-encoding": "gzip, deflate, br",[39m
+[32m  "connection": "keep-alive"[39m
+[32m}[39m
+[2025-06-11 21:59:41] [32minfo[39m : [32mquery --> {[39m
+[32m  "page": "1",[39m
+[32m  "limit": "10"[39m
+[32m}[39m
+[2025-06-11 21:59:41] [31m[1merror[22m[39m : [31m[1m[Handled] Unauthorized![22m[39m
+[2025-06-11 21:59:41] [35mhttp[39m : [35m[35mGET[35m [37m/api/v1/branches?page=1&limit=10[35m [33m401[35m [90m2.915 ms[35m[39m
+[2025-06-11 22:00:07] [32minfo[39m : [32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[39m
+[2025-06-11 22:00:07] [32minfo[39m : [32mheaders --> {[39m
+[32m  "user-agent": "PostmanRuntime/7.44.0",[39m
+[32m  "accept": "*/*",[39m
+[32m  "postman-token": "235d797e-0ae2-4a24-a58b-d60f85c0035a",[39m
+[32m  "host": "localhost:2017",[39m
+[32m  "accept-encoding": "gzip, deflate, br",[39m
+[32m  "connection": "keep-alive"[39m
+[32m}[39m
+[2025-06-11 22:00:07] [32minfo[39m : [32mquery --> {[39m
+[32m  "page": "1",[39m
+[32m  "limit": "10"[39m
+[32m}[39m
+[2025-06-11 22:00:07] [35mhttp[39m : [35m[35mGET[35m [37m/api/v1/branches?page=1&limit=10[35m [32m200[35m [90m14.532 ms[35m[39m
+[2025-06-11 22:00:22] [36mdebug[39m : [36m✅ Connected to database via Prisma[39m
+[2025-06-11 22:00:22] [36mdebug[39m : [36m🚀 App started in development mode on port 2017[39m
+[2025-06-11 22:01:09] [36mdebug[39m : [36m✅ Connected to database via Prisma[39m
+[2025-06-11 22:01:09] [36mdebug[39m : [36m🚀 App started in development mode on port 2017[39m
+[2025-06-11 22:01:15] [32minfo[39m : [32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[39m
+[2025-06-11 22:01:15] [32minfo[39m : [32mheaders --> {[39m
+[32m  "user-agent": "PostmanRuntime/7.44.0",[39m
+[32m  "accept": "*/*",[39m
+[32m  "postman-token": "b0aeb9ae-4ba1-4ae7-9b77-8529c837a5d4",[39m
+[32m  "host": "localhost:2017",[39m
+[32m  "accept-encoding": "gzip, deflate, br",[39m
+[32m  "connection": "keep-alive"[39m
+[32m}[39m
+[2025-06-11 22:01:15] [32minfo[39m : [32mquery --> {[39m
+[32m  "page": "1",[39m
+[32m  "limit": "10"[39m
+[32m}[39m
+[2025-06-11 22:01:15] [35mhttp[39m : [35m[35mGET[35m [37m/api/v1/branches?page=1&limit=10[35m [32m200[35m [90m16.218 ms[35m[39m
+[2025-06-11 22:01:27] [32minfo[39m : [32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[39m
+[2025-06-11 22:01:27] [32minfo[39m : [32mheaders --> {[39m
+[32m  "content-type": "application/json",[39m
+[32m  "user-agent": "PostmanRuntime/7.44.0",[39m
+[32m  "accept": "*/*",[39m
+[32m  "postman-token": "5aa2ac33-027d-4fd1-ba63-f09219fa46cd",[39m
+[32m  "host": "localhost:2017",[39m
+[32m  "accept-encoding": "gzip, deflate, br",[39m
+[32m  "connection": "keep-alive",[39m
+[32m  "content-length": "692"[39m
+[32m}[39m
+[2025-06-11 22:01:27] [32minfo[39m : [32mbody --> [object Object][39m
+[2025-06-11 22:01:27] [35mhttp[39m : [35m[35mPOST[35m [37m/api/v1/branches[35m [32m200[35m [90m157.736 ms[35m[39m
+[2025-06-11 22:01:45] [32minfo[39m : [32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[39m
+[2025-06-11 22:01:45] [32minfo[39m : [32mheaders --> {[39m
+[32m  "user-agent": "PostmanRuntime/7.44.0",[39m
+[32m  "accept": "*/*",[39m
+[32m  "postman-token": "2ac53ae6-71fe-42cb-9df0-a38eec5261e0",[39m
+[32m  "host": "localhost:2017",[39m
+[32m  "accept-encoding": "gzip, deflate, br",[39m
+[32m  "connection": "keep-alive"[39m
+[32m}[39m
+[2025-06-11 22:01:45] [32minfo[39m : [32mquery --> {[39m
+[32m  "page": "1",[39m
+[32m  "limit": "10"[39m
+[32m}[39m
+[2025-06-11 22:01:45] [31m[1merror[22m[39m : [31m[1m[Handled] Unauthorized![22m[39m
+[2025-06-11 22:01:45] [35mhttp[39m : [35m[35mGET[35m [37m/api/v1/branches?page=1&limit=10[35m [33m401[35m [90m1.603 ms[35m[39m
+[2025-06-11 22:01:52] [32minfo[39m : [32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[39m
+[2025-06-11 22:01:52] [32minfo[39m : [32mheaders --> {[39m
+[32m  "user-agent": "PostmanRuntime/7.44.0",[39m
+[32m  "accept": "*/*",[39m
+[32m  "postman-token": "b3d5935b-f68b-4b6b-8430-9535963bf6b0",[39m
+[32m  "host": "localhost:2017",[39m
+[32m  "accept-encoding": "gzip, deflate, br",[39m
+[32m  "connection": "keep-alive"[39m
+[32m}[39m
+[2025-06-11 22:01:52] [32minfo[39m : [32mquery --> {[39m
+[32m  "page": "1",[39m
+[32m  "limit": "10"[39m
+[32m}[39m
+[2025-06-11 22:01:52] [35mhttp[39m : [35m[35mGET[35m [37m/api/v1/branches?page=1&limit=10[35m [32m200[35m [90m5.516 ms[35m[39m
+[2025-06-11 22:02:28] [36mdebug[39m : [36m✅ Connected to database via Prisma[39m
+[2025-06-11 22:02:28] [36mdebug[39m : [36m🚀 App started in development mode on port 2017[39m
+[2025-06-11 22:02:48] [36mdebug[39m : [36m✅ Connected to database via Prisma[39m
+[2025-06-11 22:02:48] [36mdebug[39m : [36m🚀 App started in development mode on port 2017[39m
+[2025-06-11 22:03:02] [32minfo[39m : [32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[39m
+[2025-06-11 22:03:02] [32minfo[39m : [32mheaders --> {[39m
+[32m  "content-type": "text/plain",[39m
+[32m  "user-agent": "PostmanRuntime/7.44.0",[39m
+[32m  "accept": "*/*",[39m
+[32m  "postman-token": "8ac48207-0831-4bed-89d2-84cd33efa9f8",[39m
+[32m  "host": "localhost:2017",[39m
+[32m  "accept-encoding": "gzip, deflate, br",[39m
+[32m  "connection": "keep-alive",[39m
+[32m  "content-length": "448"[39m
+[32m}[39m
+[2025-06-11 22:03:02] [32minfo[39m : [32mquery --> {[39m
+[32m  "page": "1",[39m
+[32m  "limit": "10",[39m
+[32m  "term": "Zee morn"[39m
+[32m}[39m
+[2025-06-11 22:03:02] [31m[1merror[22m[39m : [31m[1m[Handled] Unauthorized![22m[39m
+[2025-06-11 22:03:02] [35mhttp[39m : [35m[35mGET[35m [37m/api/v1/specialists?page=1&limit=10&term=Zee%20morn[35m [33m401[35m [90m2.882 ms[35m[39m
+[2025-06-11 22:03:11] [32minfo[39m : [32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[39m
+[2025-06-11 22:03:11] [32minfo[39m : [32mheaders --> {[39m
+[32m  "user-agent": "PostmanRuntime/7.44.0",[39m
+[32m  "accept": "*/*",[39m
+[32m  "postman-token": "b155e884-3dfe-420d-9e54-7f4f3cadf6ec",[39m
+[32m  "host": "localhost:2017",[39m
+[32m  "accept-encoding": "gzip, deflate, br",[39m
+[32m  "connection": "keep-alive"[39m
+[32m}[39m
+[2025-06-11 22:03:11] [32minfo[39m : [32mquery --> {[39m
+[32m  "page": "1",[39m
+[32m  "limit": "10"[39m
+[32m}[39m
+[2025-06-11 22:03:11] [35mhttp[39m : [35m[35mGET[35m [37m/api/v1/branches?page=1&limit=10[35m [32m200[35m [90m16.939 ms[35m[39m
+[2025-06-11 22:04:11] [32minfo[39m : [32m%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%[39m
+[2025-06-11 22:04:11] [32minfo[39m : [32mheaders --> {[39m
+[32m  "content-type": "text/plain",[39m
+[32m  "user-agent": "PostmanRuntime/7.44.0",[39m
+[32m  "accept": "*/*",[39m
+[32m  "postman-token": "a994afca-f652-4ee3-9607-9eb29a7ada7e",[39m
+[32m  "host": "localhost:2017",[39m
+[32m  "accept-encoding": "gzip, deflate, br",[39m
+[32m  "connection": "keep-alive",[39m
+[32m  "content-length": "448"[39m
+[32m}[39m
+[2025-06-11 22:04:11] [32minfo[39m : [32mquery --> {[39m
+[32m  "page": "1",[39m
+[32m  "limit": "10",[39m
+[32m  "term": "Zee morn"[39m
+[32m}[39m
+[2025-06-11 22:04:11] [31m[1merror[22m[39m : [31m[1m[Handled] Unauthorized![22m[39m
+[2025-06-11 22:04:11] [35mhttp[39m : [35m[35mGET[35m [37m/api/v1/specialists?page=1&limit=10&term=Zee%20morn[35m [33m401[35m [90m1.061 ms[35m[39m

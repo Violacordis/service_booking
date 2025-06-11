@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const error_middleware_1 = __importDefault(require("./common/middleware/error.middleware"));
-const branch_route_1 = __importDefault(require("./branch/branch.route"));
+const routes_1 = __importDefault(require("./routes"));
 const request_interceptor_1 = require("./common/interceptors/request.interceptor");
 const response_interceptor_1 = require("./common/interceptors/response.interceptor");
 const not_found_middleware_1 = require("./common/middleware/not-found.middleware");
@@ -24,10 +24,7 @@ app.use((0, morgan_1.default)(morganFormatter_1.morganFormat, {
         write: (message) => logger_1.default.http(message.trim()),
     },
 }));
-app.use("/api/v1", branch_route_1.default);
-app.get("/api/v1", async (_req, res) => {
-    res.json({ status: "OK", message: "Welcome to my service booking API" });
-});
+app.use("/api/v1", routes_1.default);
 app.use(not_found_middleware_1.notFoundHandler);
 app.use(error_middleware_1.default);
 exports.default = app;

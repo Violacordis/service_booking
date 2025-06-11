@@ -25,18 +25,11 @@ const zod_1 = require("zod");
 //   };
 const validate = (schema) => (req, res, next) => {
     try {
-        // ❌ This is wrong for GET requests
-        // schema.parse(req.body);
-        // ✅ Detect whether to parse query or body
-        const data = req.method === "GET" ? req.query : req.body;
+        const isGet = req.method === "GET";
+        const data = isGet ? req.query : req.body;
         const parsed = schema.parse(data);
-        // Optionally assign parsed result back to req
-        if (req.method === "GET") {
-            req.query = parsed;
-        }
-        else {
-            req.body = parsed;
-        }
+        // Attach to a safe custom field instead of modifying req.query or req.body directly
+        req.validated = parsed;
         return next();
     }
     catch (err) {

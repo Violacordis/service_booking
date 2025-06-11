@@ -8,51 +8,60 @@ const prisma_1 = __importDefault(require("../../db/prisma"));
 const app_error_1 = require("../common/errors/app.error");
 const logger_1 = __importDefault(require("../common/utilities/logger"));
 class SpecialistService {
-    async createSpecialist(data) {
+    async addSpecialists(specialists) {
+        if (!specialists ||
+            !Array.isArray(specialists) ||
+            specialists.length === 0) {
+            throw new app_error_1.AppError("Invalid request: 'specialists' must be a non-empty array", 400);
+        }
         try {
-            const { categoryIds, branchId, ...specialistData } = data;
-            // Check category existence and branch consistency
-            const categories = await prisma_1.default.serviceCategory.findMany({
-                where: { id: { in: categoryIds } },
-                select: {
-                    id: true,
-                    service: { select: { branchId: true } },
-                },
-            });
-            if (categories.length !== categoryIds.length) {
-                throw new app_error_1.AppError("Invalid category IDs provided", 400);
-            }
-            const invalidCategory = categories.find((cat) => cat.service.branchId !== branchId);
-            if (invalidCategory) {
-                throw new app_error_1.AppError("All categories must belong to the specified branch", 400);
-            }
-            // Check email uniqueness
-            const specialistExists = await prisma_1.default.specialist.findUnique({
-                where: { email: data.email },
-            });
-            if (specialistExists) {
-                throw new app_error_1.AppError("Email already exists", 409);
-            }
-            const createdSpecialist = await prisma_1.default.specialist.create({
-                data: {
-                    ...specialistData,
-                    branch: { connect: { id: branchId } },
-                    specialties: {
-                        create: categoryIds.map((id) => ({
-                            category: { connect: { id } },
-                        })),
+            const results = await Promise.all(specialists.map(async (data) => {
+                const { categoryIds, branchId, ...specialistData } = data;
+                // Validate categories
+                const categories = await prisma_1.default.serviceCategory.findMany({
+                    where: { id: { in: categoryIds } },
+                    select: {
+                        id: true,
+                        service: { select: { branchId: true } },
                     },
-                },
-                include: { specialties: true },
-            });
+                });
+                if (categories.length !== categoryIds.length) {
+                    throw new app_error_1.AppError("Invalid category IDs provided", 400);
+                }
+                const invalidCategory = categories.find((cat) => cat.service.branchId !== branchId);
+                if (invalidCategory) {
+                    throw new app_error_1.AppError("All categories must belong to the specified branch", 400);
+                }
+                // Validate email uniqueness
+                const existing = await prisma_1.default.specialist.findUnique({
+                    where: { email: data.email },
+                });
+                if (existing) {
+                    throw new app_error_1.AppError(`Email ${data.email} already exists`, 409);
+                }
+                // Create specialist
+                const created = await prisma_1.default.specialist.create({
+                    data: {
+                        ...specialistData,
+                        branch: { connect: { id: branchId } },
+                        specialties: {
+                            create: categoryIds.map((id) => ({
+                                category: { connect: { id } },
+                            })),
+                        },
+                    },
+                    include: { specialties: true },
+                });
+                return created;
+            }));
             return {
-                message: "Specialist created successfully",
-                data: createdSpecialist,
+                message: "Specialists created successfully",
+                data: results,
             };
         }
         catch (error) {
-            logger_1.default.error("Error creating specialist:", error);
-            throw new app_error_1.AppError(error.message || "Failed to create specialist", error.statusCode || 500);
+            logger_1.default.error("Error creating specialists:", error);
+            throw new app_error_1.AppError(error.message || "Failed to create specialists", error.statusCode || 500);
         }
     }
     async getSpecialists(req) {
@@ -103,8 +112,8 @@ class SpecialistService {
                 prisma_1.default.specialist.count({ where: filters }),
                 prisma_1.default.specialist.findMany({
                     where: filters,
-                    skip: (page - 1) * limit,
-                    take: limit,
+                    skip: (page - 1) * Number(limit),
+                    take: Number(limit),
                     orderBy: { [sortBy]: "desc" },
                     include: {
                         specialties: {
@@ -138,8 +147,8 @@ class SpecialistService {
                 meta: {
                     total,
                     page,
-                    pageSize: limit,
-                    totalPages: Math.ceil(total / limit),
+                    pageSize: Number(limit),
+                    totalPages: Math.ceil(total / Number(limit)),
                 },
             };
         }
