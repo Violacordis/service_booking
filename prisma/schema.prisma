@@ -26,6 +26,7 @@ model Service {
   createdBy     String?                  @db.VarChar(255)
   updatedBy     String?                  @db.VarChar(255)
   categories    ServiceCategory[]
+  appointments  AppointmentService[]
 
   branch        Branch                   @relation(fields: [branchId], references: [id])
 
@@ -52,6 +53,7 @@ model ServiceCategory {
 
   service       Service                  @relation(fields: [serviceId], references: [id])
   specialists   SpecialistCategory[]
+  appointments  AppointmentServiceCategory[]
 
   @@index([code])
   @@map("service_categories")
@@ -79,6 +81,7 @@ model Branch {
 
   services      Service[]
   specialists   Specialist[]
+  appointments  Appointment[]
 
 
   @@map("branches")
@@ -104,6 +107,7 @@ model Specialist {
 
   branch        Branch                   @relation(fields: [branchId], references: [id])
   specialties   SpecialistCategory[]
+  appointments  Appointment[]
 
  
   @@index([email])
@@ -129,16 +133,112 @@ model SpecialistCategory {
 model User {
   id            String                   @id @default(uuid()) @db.Uuid
   email         String                   @unique @db.VarChar(255)
-  password      String?                  @db.VarChar(255)    //optional for guests
-  firstName     String                   @db.VarChar(255)
-  lastName      String                   @db.VarChar(255)
+  password      String                   @db.VarChar(255)    //optional for guests
+  fullName      String                   @db.VarChar(255)
   address       String?                  @db.VarChar(255) 
-  phone         String?                  @unique @db.VarChar(20)
+  phone         String?                  @unique @db.VarChar(50)
+  state         String?                  @db.VarChar(255)
+  country       String?                  @db.VarChar(255)
   status        Boolean                  @default(true)
-  isGuest       Boolean                  @default(false) // true if the user is a guest
   createdAt     DateTime                 @default(now()) @db.Timestamp(6)
   updatedAt     DateTime                 @default(now()) @updatedAt @db.Timestamp(6)
 
+  appointments  Appointment[]
+
   @@index([email])
   @@map("users")
+}
+
+model Appointment {
+  id               String                  @id @default(uuid()) @db.Uuid
+  userId           String                  @db.Uuid
+  specialistId     String                  @db.Uuid
+  branchId         String                  @db.Uuid
+  appointmentDate  DateTime                @db.Timestamp(6)
+  type             AppointmentType         @default(PERSONAL)
+  status           AppointmentStatus       @default(PENDING)
+  totalCost        Float                   @default(0.0)
+  numberOfClients  Int?                    @default(1) // applicable for GROUP type
+  services         AppointmentService[]
+  createdAt        DateTime                 @default(now()) @db.Timestamp(6)
+  updatedAt        DateTime                 @default(now()) @updatedAt @db.Timestamp(6)
+
+  user             User                     @relation(fields: [userId], references: [id])
+  specialist       Specialist              @relation(fields: [specialistId], references: [id])
+  branch           Branch                  @relation(fields: [branchId], references: [id])
+  payment          Payment?
+
+
+  @@index([appointmentDate])
+  @@index([status])
+  @@index([type])
+  @@index([userId])
+  @@index([specialistId])
+  @@index([branchId])
+  @@map("appointments")
+}
+
+enum AppointmentType {
+  PERSONAL
+  GROUP
+}
+
+enum AppointmentStatus {
+  PENDING
+  PAID
+  CANCELLED
+  COMPLETED
+}
+
+model AppointmentService {
+  id               String                         @id @default(uuid()) @db.Uuid
+  appointmentId    String                         @db.Uuid
+  serviceId        String                         @db.Uuid
+  createdAt        DateTime                       @default(now()) @db.Timestamp(6)
+  updatedAt        DateTime                       @default(now()) @updatedAt @db.Timestamp(6)
+  service          Service                        @relation(fields: [serviceId], references: [id])
+  appointment      Appointment                    @relation(fields: [appointmentId], references: [id])
+  categories       AppointmentServiceCategory[]
+
+  @@index([appointmentId])
+  @@index([serviceId])
+  @@map("appointment_services")
+
+}
+
+model AppointmentServiceCategory {
+  id                   String                    @id @default(uuid()) @db.Uuid
+  appointmentServiceId String                    @db.Uuid
+  categoryId           String                    @db.Uuid
+  createdAt            DateTime                  @default(now()) @db.Timestamp(6)
+  updatedAt            DateTime                  @default(now()) @updatedAt @db.Timestamp(6)
+  category             ServiceCategory           @relation(fields: [categoryId], references: [id])
+  appointmentService   AppointmentService        @relation(fields: [appointmentServiceId], references: [id])
+
+ @@index([appointmentServiceId])
+  @@index([categoryId])
+  @@map("appointment_service_categories")
+}
+
+model Payment {
+  id            String                   @id @default(uuid()) @db.Uuid
+  appointmentId String                   @db.Uuid @unique
+  amount        Float                    @default(0.0)
+  currency      String?                   
+  status        PaymentStatus            @default(PENDING)
+  intentId      String?                  @db.VarChar(255) 
+  createdAt     DateTime                 @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime                 @default(now()) @updatedAt @db.Timestamp(6)
+
+  appointment   Appointment              @relation(fields: [appointmentId], references: [id])
+
+  @@index([appointmentId])
+  @@index([status])
+  @@map("payments")
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
 }
