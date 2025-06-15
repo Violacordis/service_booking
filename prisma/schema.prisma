@@ -156,7 +156,9 @@ model Appointment {
   branchId         String                  @db.Uuid
   appointmentDate  DateTime                @db.Timestamp(6)
   type             AppointmentType         @default(PERSONAL)
-  status           AppointmentStatus        @default(PENDING)
+  status           AppointmentStatus       @default(PENDING)
+  totalCost        Float                   @default(0.0)
+  numberOfClients  Int?                    @default(1) // applicable for GROUP type
   services         AppointmentService[]
   createdAt        DateTime                 @default(now()) @db.Timestamp(6)
   updatedAt        DateTime                 @default(now()) @updatedAt @db.Timestamp(6)
@@ -164,6 +166,7 @@ model Appointment {
   user             User                     @relation(fields: [userId], references: [id])
   specialist       Specialist              @relation(fields: [specialistId], references: [id])
   branch           Branch                  @relation(fields: [branchId], references: [id])
+  payment          Payment?
 
 
   @@index([appointmentDate])
@@ -182,7 +185,7 @@ enum AppointmentType {
 
 enum AppointmentStatus {
   PENDING
-  CONFIRMED
+  PAID
   CANCELLED
   COMPLETED
 }
@@ -215,4 +218,27 @@ model AppointmentServiceCategory {
  @@index([appointmentServiceId])
   @@index([categoryId])
   @@map("appointment_service_categories")
+}
+
+model Payment {
+  id            String                   @id @default(uuid()) @db.Uuid
+  appointmentId String                   @db.Uuid @unique
+  amount        Float                    @default(0.0)
+  currency      String?                   
+  status        PaymentStatus            @default(PENDING)
+  intentId      String?                  @db.VarChar(255) 
+  createdAt     DateTime                 @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime                 @default(now()) @updatedAt @db.Timestamp(6)
+
+  appointment   Appointment              @relation(fields: [appointmentId], references: [id])
+
+  @@index([appointmentId])
+  @@index([status])
+  @@map("payments")
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
 }

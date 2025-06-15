@@ -2,6 +2,7 @@ import express from "express";
 
 import errorHandler from "./common/middleware/error.middleware";
 import routes from "./routes";
+import webhookRoutes from "./webhook/webhook.route";
 import { RequestInterceptor } from "./common/interceptors/request.interceptor";
 import { ResponseInterceptor } from "./common/interceptors/response.interceptor";
 import { notFoundHandler } from "./common/middleware/not-found.middleware";
@@ -10,6 +11,7 @@ import { morganFormat } from "./common/utilities/morganFormatter";
 import logger from "./common/utilities/logger";
 
 const app = express();
+app.use("/webhook", webhookRoutes);
 
 app.use(express.json({ strict: true, limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));

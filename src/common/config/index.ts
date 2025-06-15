@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import { version } from "os";
 
 dotenv.config();
 
@@ -35,6 +36,12 @@ const config = {
   redis: {
     host: env("REDIS_HOST", "localhost"),
     port: Number(env("REDIS_PORT")),
+  },
+  stripe: {
+    secretKey: env.require("STRIPE_SECRET_KEY"),
+    webhookSecret: env.require("STRIPE_WEBHOOK_SECRET"),
+    publishableKey: env("STRIPE_PUBLISHABLE_KEY"),
+    version: env("STRIPE_API_VERSION", "2025-05-28.basil"),
   },
 };
 
