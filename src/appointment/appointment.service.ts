@@ -1,4 +1,5 @@
 import prisma from "../../db/prisma";
+import { Currency } from "../../generated/prisma";
 import { AppError } from "../common/errors/app.error";
 
 export class AppointmentService {
@@ -9,6 +10,8 @@ export class AppointmentService {
     appointmentDateTime,
     branchId,
     totalCost,
+    notes,
+    currency,
     numberOfClients,
   }: {
     userId: string;
@@ -20,6 +23,8 @@ export class AppointmentService {
     appointmentDateTime: string;
     branchId: string;
     totalCost: number;
+    notes?: string;
+    currency: string;
     numberOfClients: number;
   }) {
     // check if specialist exists in the branch
@@ -77,6 +82,8 @@ export class AppointmentService {
         branchId,
         appointmentDate: new Date(appointmentDateTime),
         totalCost,
+        notes: notes ?? null,
+        currency: currency as Currency,
         numberOfClients,
         services: {
           create: serviceSelections.map(({ serviceId, categoryIds }) => ({

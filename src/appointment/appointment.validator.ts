@@ -16,6 +16,8 @@ const personalBookingSchema = z.object({
   branchId: z.string().uuid(),
   totalCost: z.number().min(0, "Total cost must be a positive number"),
   numberOfClients: z.number().int().min(1, "At least one client is required"),
+  notes: z.string().optional(),
+  currency: z.enum(["usd", "eur", "gbp", "ngn"]).default("usd"),
 });
 
 export { personalBookingSchema };

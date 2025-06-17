@@ -36,7 +36,9 @@ export class WebhookController {
           );
           break;
         case "payment_intent.payment_failed":
-          // Handle failed payment
+          await this.webhookService.handlePaymentIntentFailed(
+            event.data.object as any
+          );
           break;
         default:
           logger.debug(`Unhandled event type: ${event.type}`);
