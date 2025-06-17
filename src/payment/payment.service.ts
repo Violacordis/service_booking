@@ -1,7 +1,11 @@
 import { AppError } from "../common/errors/app.error";
 import { StripeService } from "../common/stripe/stripe";
 import prisma from "../../db/prisma";
-import { AppointmentStatus, PaymentStatus } from "../../generated/prisma";
+import {
+  AppointmentStatus,
+  Currency,
+  PaymentStatus,
+} from "../../generated/prisma";
 import app from "../app";
 import logger from "../common/utilities/logger";
 
@@ -21,9 +25,13 @@ export class PaymentService {
         );
       }
 
-      if (appointment.status !== AppointmentStatus.PENDING) {
+      if (appointment.status == AppointmentStatus.PAID) {
+        throw new AppError("Appointment has already been paid for", 400);
+      }
+
+      if (appointment.totalCost < 900 && appointment.currency == Currency.ngn) {
         throw new AppError(
-          "Appointment has already been paid for or is not in a payable state",
+          "Minimum payment for NGN appointments is 900 (50cents",
           400
         );
       }
@@ -57,7 +65,8 @@ export class PaymentService {
         clientSecret = await this.stripeService.createPaymentIntent(
           appointmentId,
           appointment.totalCost,
-          userId
+          userId,
+          appointment.currency
         );
       }
 

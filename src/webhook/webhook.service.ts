@@ -80,4 +80,29 @@ export class WebhookService {
       `Payment succeeded for appointment ${appointmentId} with payment intent ${paymentIntent.id}`
     );
   }
+
+  async handlePaymentIntentFailed(
+    paymentIntent: Stripe.PaymentIntent
+  ): Promise<void> {
+    logger.info(`Handling payment intent failed for ${paymentIntent.id}`);
+    if (!paymentIntent.metadata || !paymentIntent.metadata.appointmentId) {
+      logger.warn(
+        `Payment intent ${paymentIntent.id} does not have required metadata`
+      );
+      return;
+    }
+    const appointmentId = paymentIntent.metadata.appointmentId;
+    const userId = paymentIntent.metadata.userId;
+
+    await prisma.payment.update({
+      where: { appointmentId, intentId: paymentIntent.id },
+      data: {
+        status: PaymentStatus.FAILED,
+      },
+    });
+
+    logger.info(
+      `Payment failed for appointment ${appointmentId} with payment intent ${paymentIntent.id}`
+    );
+  }
 }

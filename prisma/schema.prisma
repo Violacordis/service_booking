@@ -158,6 +158,8 @@ model Appointment {
   type             AppointmentType         @default(PERSONAL)
   status           AppointmentStatus       @default(PENDING)
   totalCost        Float                   @default(0.0)
+  currency         Currency                @default(usd)
+  notes            String?                 @db.VarChar(255) 
   numberOfClients  Int?                    @default(1) // applicable for GROUP type
   services         AppointmentService[]
   createdAt        DateTime                 @default(now()) @db.Timestamp(6)
@@ -176,6 +178,13 @@ model Appointment {
   @@index([specialistId])
   @@index([branchId])
   @@map("appointments")
+}
+
+enum Currency {
+  usd
+  eur
+  gbp
+  ngn
 }
 
 enum AppointmentType {
@@ -242,3 +251,5 @@ enum PaymentStatus {
   SUCCESS
   FAILED
 }
+
+

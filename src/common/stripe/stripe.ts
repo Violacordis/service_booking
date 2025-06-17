@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import config from "../config";
 import { AppError } from "../errors/app.error";
+import { Currency } from "../../../generated/prisma";
 
 export class StripeService {
   private stripe: Stripe;
@@ -22,12 +23,13 @@ export class StripeService {
   async createPaymentIntent(
     appointmentId: string,
     amount: number,
-    userId: string
+    userId: string,
+    currency: Currency
   ) {
     try {
       const paymentIntent = await this.stripe.paymentIntents.create({
         amount: amount * 100, // convert to smallest unit
-        currency: "ngn",
+        currency,
         description: `Payment for appointment ${appointmentId} by user ${userId}`,
         payment_method_types: ["card"],
         metadata: {
