@@ -151,6 +151,15 @@ export class AppointmentService {
             specialist: { name: { contains: searchTerm, mode: "insensitive" } },
           },
           { branch: { name: { contains: searchTerm, mode: "insensitive" } } },
+          {
+            services: {
+              some: {
+                service: {
+                  name: { contains: searchTerm, mode: "insensitive" },
+                },
+              },
+            },
+          },
         ];
       }
 
@@ -195,12 +204,11 @@ export class AppointmentService {
           take: Number(limit),
           orderBy: { [sortBy]: "desc" },
           include: {
-            payment: {
-              select: {
-                id: true,
-                amount: true,
-                currency: true,
-                status: true,
+            services: {
+              include: {
+                service: {
+                  select: { name: true, id: true, description: true },
+                },
               },
             },
             specialist: {
@@ -221,6 +229,14 @@ export class AppointmentService {
                 country: true,
               },
             },
+            payment: {
+              select: {
+                id: true,
+                amount: true,
+                currency: true,
+                status: true,
+              },
+            },
           },
         }),
       ]);
@@ -238,6 +254,59 @@ export class AppointmentService {
     } catch (error: any) {
       logger.error("Error fetching appointments:", error);
       throw new AppError("Failed to fetch user appointments", 500);
+    }
+  }
+
+  async getUserAppointmentById(appointmentId: string, userId: string) {
+    try {
+      const appointment = await prisma.appointment.findFirst({
+        where: {
+          id: appointmentId,
+          userId,
+        },
+        include: {
+          services: {
+            include: {
+              service: { select: { name: true, id: true, description: true } },
+            },
+          },
+          specialist: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              phone: true,
+            },
+          },
+          branch: {
+            select: {
+              id: true,
+              name: true,
+              address: true,
+              city: true,
+              state: true,
+              country: true,
+            },
+          },
+          payment: {
+            select: {
+              id: true,
+              amount: true,
+              currency: true,
+              status: true,
+            },
+          },
+        },
+      });
+
+      if (!appointment) {
+        throw new AppError("Appointment not found", 404);
+      }
+
+      return appointment;
+    } catch (error) {
+      logger.error("Error fetching appointment by ID:", error);
+      throw new AppError("Failed to fetch appointment", 500);
     }
   }
 }

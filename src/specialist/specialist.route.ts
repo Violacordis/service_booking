@@ -14,7 +14,7 @@ router.post("/", validate(createSpecialistsSchema), controller.addSpecialists);
 router.get(
   "/",
   authenticate,
-  validate(getSpecialistsQuerySchema),
+  validate(getSpecialistsQuerySchema, "query"),
   controller.getSpecialists
 );
 

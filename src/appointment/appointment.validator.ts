@@ -9,11 +9,13 @@ const personalBookingSchema = z.object({
       })
     )
     .min(1),
-  specialistId: z.string().uuid(),
+  specialistId: z
+    .string()
+    .uuid({ message: "Specialist ID must be a valid UUID" }),
   appointmentDateTime: z
     .string()
     .refine((val) => !isNaN(Date.parse(val)), "Invalid datetime"),
-  branchId: z.string().uuid(),
+  branchId: z.string().uuid({ message: "Branch ID must be a valid UUID" }),
   totalCost: z.number().min(0, "Total cost must be a positive number"),
   numberOfClients: z.number().int().min(1, "At least one client is required"),
   notes: z.string().optional(),
@@ -84,4 +86,12 @@ const getUserAppointmentsQuerySchema = z.object({
   term: z.string().optional(),
 });
 
-export { personalBookingSchema, getUserAppointmentsQuerySchema };
+const getUserAppointmentsQuerySchemaWithUserId = z.object({
+  id: z.string().uuid({ message: "Appointment ID must be a valid UUID" }),
+});
+
+export {
+  personalBookingSchema,
+  getUserAppointmentsQuerySchema,
+  getUserAppointmentsQuerySchemaWithUserId,
+};

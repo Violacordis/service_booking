@@ -3,6 +3,7 @@ import { validate } from "../common/middleware/validate.middleware";
 import { AppointmentController } from "./appointment.controller";
 import {
   getUserAppointmentsQuerySchema,
+  getUserAppointmentsQuerySchemaWithUserId,
   personalBookingSchema,
 } from "./appointment.validator";
 
@@ -15,8 +16,13 @@ router.post(
 );
 router.get(
   "/",
-  validate(getUserAppointmentsQuerySchema),
+  validate(getUserAppointmentsQuerySchema, "query"),
   controller.getAppointments
+);
+router.get(
+  "/:id",
+  validate(getUserAppointmentsQuerySchemaWithUserId, "params"),
+  controller.getUserAppointmentById
 );
 
 export default router;

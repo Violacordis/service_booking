@@ -10,7 +10,7 @@ router.post("/", validate(createBranchSchema), controller.createBranches);
 router.get(
   "/",
   authenticate,
-  validate(getBranchesQuerySchema),
+  validate(getBranchesQuerySchema, "query"),
   controller.fetchBranches
 );
 

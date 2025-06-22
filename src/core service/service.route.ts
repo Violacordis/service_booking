@@ -13,7 +13,7 @@ router.post("/", validate(createServicesSchema), controller.createServices);
 router.get(
   "/",
   authenticate,
-  validate(getServicesQuerySchema),
+  validate(getServicesQuerySchema, "query"),
   controller.getServices
 );
 
