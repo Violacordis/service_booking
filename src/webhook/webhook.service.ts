@@ -76,6 +76,8 @@ export class WebhookService {
       },
     });
 
+    //TODO: Send confirmation email to user
+
     logger.info(
       `Payment succeeded for appointment ${appointmentId} with payment intent ${paymentIntent.id}`
     );
@@ -100,6 +102,8 @@ export class WebhookService {
         status: PaymentStatus.FAILED,
       },
     });
+
+    //TODO: Send failure notification to user
 
     logger.info(
       `Payment failed for appointment ${appointmentId} with payment intent ${paymentIntent.id}`

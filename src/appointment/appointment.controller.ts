@@ -21,4 +21,18 @@ export class AppointmentController {
 
     res.json(data);
   };
+
+  getAppointments = async (req: Request, res: Response) => {
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new AppError("Unauthorized!", 401);
+    }
+
+    const data = await this.appointmentService.getUserAppointments({
+      query: (req as any).validated,
+      userId,
+    });
+
+    res.json(data);
+  };
 }

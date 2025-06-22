@@ -1,6 +1,12 @@
 import prisma from "../../db/prisma";
-import { Currency } from "../../generated/prisma";
+import {
+  AppointmentStatus,
+  AppointmentType,
+  Currency,
+  PaymentStatus,
+} from "../../generated/prisma";
 import { AppError } from "../common/errors/app.error";
+import logger from "../common/utilities/logger";
 
 export class AppointmentService {
   async createPersonalBooking({
@@ -104,5 +110,134 @@ export class AppointmentService {
         },
       },
     });
+  }
+
+  async getUserAppointments(req: {
+    query: {
+      page?: number;
+      limit?: number;
+      term?: string;
+      branchId?: string;
+      status?: AppointmentStatus;
+      type?: AppointmentType;
+      startDate?: string;
+      endDate?: string;
+      paymentStatus?: string;
+      sortBy?: string;
+    };
+    userId: string;
+  }) {
+    try {
+      const {
+        page = 1,
+        limit = 10,
+        term,
+        branchId,
+        status,
+        type,
+        startDate,
+        endDate,
+        paymentStatus,
+        sortBy = "createdAt",
+      } = req.query;
+
+      const filters: any = { userId: req.userId };
+
+      // Search term filter
+      if (term) {
+        const searchTerm = term.trim();
+        filters.OR = [
+          {
+            specialist: { name: { contains: searchTerm, mode: "insensitive" } },
+          },
+          { branch: { name: { contains: searchTerm, mode: "insensitive" } } },
+        ];
+      }
+
+      // Status filter
+      if (status !== undefined) {
+        filters.status = status as AppointmentStatus;
+      }
+
+      // Branch filter
+      if (branchId) {
+        filters.branchId = branchId;
+      }
+
+      if (paymentStatus) {
+        filters.paymentStatus = {
+          payment: {
+            status: paymentStatus as PaymentStatus,
+          },
+        };
+      }
+
+      if (type) {
+        filters.type = type as AppointmentType;
+      }
+
+      // Date range filter
+      if (startDate || endDate) {
+        filters.appointmentDate = {};
+        if (startDate) {
+          filters.appointmentDate.gte = new Date(startDate);
+        }
+        if (endDate) {
+          filters.appointmentDate.lte = new Date(endDate);
+        }
+      }
+
+      const [total, appointments] = await Promise.all([
+        prisma.appointment.count({ where: filters }),
+        prisma.appointment.findMany({
+          where: filters,
+          skip: (page - 1) * Number(limit),
+          take: Number(limit),
+          orderBy: { [sortBy]: "desc" },
+          include: {
+            payment: {
+              select: {
+                id: true,
+                amount: true,
+                currency: true,
+                status: true,
+              },
+            },
+            specialist: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                phone: true,
+              },
+            },
+            branch: {
+              select: {
+                id: true,
+                name: true,
+                address: true,
+                city: true,
+                state: true,
+                country: true,
+              },
+            },
+          },
+        }),
+      ]);
+
+      return {
+        message: "User Appointments fetched successfully",
+        data: appointments,
+        meta: {
+          total,
+          page,
+          pageSize: Number(limit),
+          totalPages: Math.ceil(total / Number(limit)),
+        },
+      };
+    } catch (error: any) {
+      logger.error("Error fetching appointments:", error);
+      throw new AppError("Failed to fetch user appointments", 500);
+    }
   }
 }
