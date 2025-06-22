@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { AppointmentStatus } from "../../generated/prisma";
 
 const personalBookingSchema = z.object({
   serviceSelections: z
@@ -42,10 +43,15 @@ const getUserAppointmentsQuerySchema = z.object({
     .default("10"),
 
   status: z
-    .enum(["PENDING", "PAID", "CANCELLED", "COMPLETED"], {
-      message:
-        "Status must be one of 'PENDING', 'PAID', 'CANCELLED', or 'COMPLETED'",
-    })
+    .string()
+    .transform((val) => val.toUpperCase())
+    .refine(
+      (val) =>
+        Object.values(AppointmentStatus).includes(val as AppointmentStatus),
+      {
+        message: "Invalid status value",
+      }
+    )
     .optional(),
 
   branchId: z
@@ -86,12 +92,21 @@ const getUserAppointmentsQuerySchema = z.object({
   term: z.string().optional(),
 });
 
-const getUserAppointmentsQuerySchemaWithUserId = z.object({
+const getUserAppointmentsParamSchemaWithUserId = z.object({
   id: z.string().uuid({ message: "Appointment ID must be a valid UUID" }),
+});
+
+const cancelAppointmentParamSchema = z.object({
+  id: z.string().uuid({ message: "Appointment ID must be a valid UUID" }),
+});
+const cancelAppointmentBodySchema = z.object({
+  reason: z.string().optional(),
 });
 
 export {
   personalBookingSchema,
   getUserAppointmentsQuerySchema,
-  getUserAppointmentsQuerySchemaWithUserId,
+  getUserAppointmentsParamSchemaWithUserId,
+  cancelAppointmentParamSchema,
+  cancelAppointmentBodySchema,
 };

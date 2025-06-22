@@ -6,11 +6,15 @@ import { authenticate } from "../common/middleware/authenticate.middleware";
 const router = Router();
 const controller = new BranchController();
 
-router.post("/", validate(createBranchSchema), controller.createBranches);
+router.post(
+  "/",
+  validate({ body: createBranchSchema }),
+  controller.createBranches
+);
 router.get(
   "/",
   authenticate,
-  validate(getBranchesQuerySchema, "query"),
+  validate({ query: getBranchesQuerySchema }),
   controller.fetchBranches
 );
 

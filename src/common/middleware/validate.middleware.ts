@@ -1,26 +1,30 @@
 import { ZodSchema, ZodError } from "zod";
 import { Request, Response, NextFunction } from "express";
 
+type SchemaMap = Partial<{
+  body: ZodSchema<any>;
+  params: ZodSchema<any>;
+  query: ZodSchema<any>;
+}>;
+
 const validate =
-  (schema: ZodSchema<any>, source: "body" | "query" | "params" = "body") =>
+  (schemas: SchemaMap) =>
   (req: Request, res: Response, next: NextFunction): void => {
     try {
-      let data: any;
+      const validated: Record<string, any> = {};
 
-      switch (source) {
-        case "query":
-          data = req.query;
-          break;
-        case "params":
-          data = req.params;
-          break;
-        default:
-          data = req.body;
+      if (schemas.body) {
+        validated.body = schemas.body.parse(req.body);
+      }
+      if (schemas.params) {
+        validated.params = schemas.params.parse(req.params);
+      }
+      if (schemas.query) {
+        validated.query = schemas.query.parse(req.query);
       }
 
-      const parsed = schema.parse(data);
-
-      (req as any).validated = parsed;
+      // Attach validated data
+      (req as any).validated = validated;
 
       return next();
     } catch (err) {
@@ -35,6 +39,7 @@ const validate =
         });
         return;
       }
+
       return next(err);
     }
   };

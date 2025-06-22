@@ -7,7 +7,7 @@ const router = Router();
 const controller = new PaymentController();
 router.post(
   "/",
-  validate(AppointmentPaymentSchema),
+  validate({ body: AppointmentPaymentSchema }),
   controller.payForAppointment
 );
 

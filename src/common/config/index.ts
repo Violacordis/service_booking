@@ -31,7 +31,7 @@ const config = {
   },
   jwt: {
     secret: env.require("JWT_SECRET"),
-    expiresIn: env("JWT_EXPIRES_IN", "1h"),
+    expiresIn: env("JWT_EXPIRES_IN", "24h"),
   },
   redis: {
     host: env("REDIS_HOST", "localhost"),

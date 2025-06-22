@@ -118,7 +118,7 @@ export class AppointmentService {
       limit?: number;
       term?: string;
       branchId?: string;
-      status?: AppointmentStatus;
+      status?: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
       type?: AppointmentType;
       startDate?: string;
       endDate?: string;
@@ -141,7 +141,7 @@ export class AppointmentService {
         sortBy = "createdAt",
       } = req.query;
 
-      const filters: any = { userId: req.userId };
+      const filters: any = {};
 
       // Search term filter
       if (term) {
@@ -164,8 +164,8 @@ export class AppointmentService {
       }
 
       // Status filter
-      if (status !== undefined) {
-        filters.status = status as AppointmentStatus;
+      if (status) {
+        filters.status = status;
       }
 
       // Branch filter
@@ -195,6 +195,7 @@ export class AppointmentService {
           filters.appointmentDate.lte = new Date(endDate);
         }
       }
+      filters.userId = req.userId;
 
       const [total, appointments] = await Promise.all([
         prisma.appointment.count({ where: filters }),
@@ -253,7 +254,13 @@ export class AppointmentService {
       };
     } catch (error: any) {
       logger.error("Error fetching appointments:", error);
-      throw new AppError("Failed to fetch user appointments", 500);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+
+      throw new AppError(
+        `Failed to fetch user appointments: ${errorMessage}`,
+        500
+      );
     }
   }
 
@@ -307,6 +314,46 @@ export class AppointmentService {
     } catch (error) {
       logger.error("Error fetching appointment by ID:", error);
       throw new AppError("Failed to fetch appointment", 500);
+    }
+  }
+
+  async cancelAppointment(
+    appointmentId: string,
+    userId: string,
+    reason?: string
+  ) {
+    try {
+      const appointment = await prisma.appointment.findFirst({
+        where: { id: appointmentId, userId },
+      });
+
+      if (!appointment) {
+        throw new AppError("Appointment not found", 404);
+      }
+
+      if (appointment.status === AppointmentStatus.CANCELLED) {
+        throw new AppError("Appointment is already cancelled", 400);
+      }
+
+      if (appointment.status === AppointmentStatus.PAID) {
+        throw new AppError(
+          "Cannot cancel a paid appointment. Please contact support.",
+          400
+        );
+      }
+
+      return prisma.appointment.update({
+        where: { id: appointmentId },
+        data: {
+          status: AppointmentStatus.CANCELLED,
+          cancelReason: reason ?? null,
+        },
+      });
+    } catch (error) {
+      logger.error("Error cancelling appointment:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      throw new AppError(`Failed to cancel appointment: ${errorMessage}`, 500);
     }
   }
 }

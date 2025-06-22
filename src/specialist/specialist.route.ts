@@ -10,11 +10,15 @@ const router = Router();
 
 const controller = new SpecialistController();
 
-router.post("/", validate(createSpecialistsSchema), controller.addSpecialists);
+router.post(
+  "/",
+  validate({ body: createSpecialistsSchema }),
+  controller.addSpecialists
+);
 router.get(
   "/",
   authenticate,
-  validate(getSpecialistsQuerySchema, "query"),
+  validate({ query: getSpecialistsQuerySchema }),
   controller.getSpecialists
 );
 

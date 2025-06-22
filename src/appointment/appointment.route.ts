@@ -2,8 +2,10 @@ import { Router } from "express";
 import { validate } from "../common/middleware/validate.middleware";
 import { AppointmentController } from "./appointment.controller";
 import {
+  cancelAppointmentBodySchema,
+  cancelAppointmentParamSchema,
   getUserAppointmentsQuerySchema,
-  getUserAppointmentsQuerySchemaWithUserId,
+  getUserAppointmentsParamSchemaWithUserId,
   personalBookingSchema,
 } from "./appointment.validator";
 
@@ -11,18 +13,26 @@ const router = Router();
 const controller = new AppointmentController();
 router.post(
   "/book-personal",
-  validate(personalBookingSchema),
+  validate({ body: personalBookingSchema }),
   controller.bookPersonalAppointment
 );
 router.get(
   "/",
-  validate(getUserAppointmentsQuerySchema, "query"),
+  validate({ query: getUserAppointmentsQuerySchema }),
   controller.getAppointments
 );
 router.get(
   "/:id",
-  validate(getUserAppointmentsQuerySchemaWithUserId, "params"),
+  validate({ params: getUserAppointmentsParamSchemaWithUserId }),
   controller.getUserAppointmentById
+);
+router.patch(
+  "/:id/cancel",
+  validate({
+    params: cancelAppointmentParamSchema,
+    body: cancelAppointmentBodySchema.optional(),
+  }),
+  controller.cancelAppointment
 );
 
 export default router;
