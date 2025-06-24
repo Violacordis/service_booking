@@ -29,7 +29,7 @@ export class AppointmentController {
     }
 
     const data = await this.appointmentService.getUserAppointments({
-      query: (req as any).validated,
+      query: (req as any).validated.query,
       userId,
     });
 

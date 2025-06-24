@@ -1,3 +1,4 @@
+import { equals } from "class-validator";
 import prisma from "../../db/prisma";
 import {
   AppointmentStatus,
@@ -118,7 +119,7 @@ export class AppointmentService {
       limit?: number;
       term?: string;
       branchId?: string;
-      status?: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
+      status?: string;
       type?: AppointmentType;
       startDate?: string;
       endDate?: string;
@@ -165,7 +166,7 @@ export class AppointmentService {
 
       // Status filter
       if (status) {
-        filters.status = status;
+        filters.status = { equals: status as AppointmentStatus };
       }
 
       // Branch filter
@@ -174,11 +175,13 @@ export class AppointmentService {
       }
 
       if (paymentStatus) {
-        filters.paymentStatus = {
-          payment: {
-            status: paymentStatus as PaymentStatus,
-          },
-        };
+        if (paymentStatus) {
+          filters.payment = {
+            is: {
+              status: paymentStatus.toUpperCase() as PaymentStatus,
+            },
+          };
+        }
       }
 
       if (type) {

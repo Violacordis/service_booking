@@ -48,9 +48,7 @@ const getUserAppointmentsQuerySchema = z.object({
     .refine(
       (val) =>
         Object.values(AppointmentStatus).includes(val as AppointmentStatus),
-      {
-        message: "Invalid status value",
-      }
+      { message: "Invalid status value" }
     )
     .optional(),
 
