@@ -43,6 +43,15 @@ const config = {
     publishableKey: env("STRIPE_PUBLISHABLE_KEY"),
     version: env("STRIPE_API_VERSION", "2025-05-28.basil"),
   },
+  email: {
+    mailHost: env.require("MAIL_HOST"),
+    mailPort: Number(env.require("MAIL_PORT")),
+    auth: {
+      user: env.require("AUTH_MAIL_USER"),
+      pass: env.require("AUTH_MAIL_PASS"),
+    },
+    mailFrom: env.require("DEFAULT_FROM_EMAIL", "support@nailer.com"),
+  },
 };
 
 export default config;

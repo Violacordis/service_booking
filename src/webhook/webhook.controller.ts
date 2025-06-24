@@ -1,12 +1,13 @@
-// src/controllers/webhook.controller.ts
 import { NextFunction, Request, Response } from "express";
 import { StripeService } from "../common/stripe/stripe";
 import logger from "../common/utilities/logger";
 import { WebhookService } from "./webhook.service";
+import { EmailService } from "../common/mailer";
 
 export class WebhookController {
   private stripeService = new StripeService();
   private webhookService = new WebhookService();
+  private emailService = new EmailService();
 
   handleStripeWebhook = async (
     req: Request,
@@ -32,12 +33,14 @@ export class WebhookController {
           break;
         case "payment_intent.succeeded":
           await this.webhookService.handlePaymentIntentSucceeded(
-            event.data.object as any
+            event.data.object as any,
+            this.emailService
           );
           break;
         case "payment_intent.payment_failed":
           await this.webhookService.handlePaymentIntentFailed(
-            event.data.object as any
+            event.data.object as any,
+            this.emailService
           );
           break;
         default:
