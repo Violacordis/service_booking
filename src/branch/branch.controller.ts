@@ -19,7 +19,7 @@ export class BranchController {
 
   fetchBranches = async (req: Request, res: Response) => {
     const data = await this.branchService.getBranches({
-      query: (req as any).validated,
+      query: (req as any).validated.query,
     });
     res.json(data);
   };

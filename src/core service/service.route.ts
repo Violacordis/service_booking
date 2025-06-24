@@ -9,11 +9,15 @@ import { authenticate } from "../common/middleware/authenticate.middleware";
 const router = Router();
 const controller = new CoreServiceController();
 
-router.post("/", validate(createServicesSchema), controller.createServices);
+router.post(
+  "/",
+  validate({ body: createServicesSchema }),
+  controller.createServices
+);
 router.get(
   "/",
   authenticate,
-  validate(getServicesQuerySchema),
+  validate({ query: getServicesQuerySchema }),
   controller.getServices
 );
 

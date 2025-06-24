@@ -1,38 +1,30 @@
 import { ZodSchema, ZodError } from "zod";
 import { Request, Response, NextFunction } from "express";
 
-// export const validate =
-//   (schema: ZodSchema<any>) =>
-//   (req: Request, res: Response, next: NextFunction): void => {
-//     try {
-//       schema.parse(req.body);
-//       return next();
-//     } catch (err) {
-//       if (err instanceof ZodError) {
-//         res.status(400).json({
-//           success: false,
-//           message: "Validation failed",
-//           errors: err.errors.map((e) => ({
-//             path: e.path.join("."),
-//             message: e.message,
-//           })),
-//         });
-//         return;
-//       }
-//       return next(err);
-//     }
-//   };
-export const validate =
-  (schema: ZodSchema<any>) =>
+type SchemaMap = Partial<{
+  body: ZodSchema<any>;
+  params: ZodSchema<any>;
+  query: ZodSchema<any>;
+}>;
+
+const validate =
+  (schemas: SchemaMap) =>
   (req: Request, res: Response, next: NextFunction): void => {
     try {
-      const isGet = req.method === "GET";
-      const data = isGet ? req.query : req.body;
+      const validated: Record<string, any> = {};
 
-      const parsed = schema.parse(data);
+      if (schemas.body) {
+        validated.body = schemas.body.parse(req.body);
+      }
+      if (schemas.params) {
+        validated.params = schemas.params.parse(req.params);
+      }
+      if (schemas.query) {
+        validated.query = schemas.query.parse(req.query);
+      }
 
-      // Attach to a safe custom field instead of modifying req.query or req.body directly
-      (req as any).validated = parsed;
+      // Attach validated data
+      (req as any).validated = validated;
 
       return next();
     } catch (err) {
@@ -47,6 +39,9 @@ export const validate =
         });
         return;
       }
+
       return next(err);
     }
   };
+
+export { validate };

@@ -160,15 +160,17 @@ model Appointment {
   totalCost        Float                   @default(0.0)
   currency         Currency                @default(usd)
   notes            String?                 @db.VarChar(255) 
-  numberOfClients  Int?                    @default(1) // applicable for GROUP type
-  services         AppointmentService[]
-  createdAt        DateTime                 @default(now()) @db.Timestamp(6)
-  updatedAt        DateTime                 @default(now()) @updatedAt @db.Timestamp(6)
+  cancelReason     String?                 @db.VarChar(255) 
+  numberOfClients  Int?                    @default(1)
+  createdAt        DateTime                @default(now()) @db.Timestamp(6)
+  updatedAt        DateTime                @default(now()) @updatedAt @db.Timestamp(6)
 
   user             User                     @relation(fields: [userId], references: [id])
-  specialist       Specialist              @relation(fields: [specialistId], references: [id])
-  branch           Branch                  @relation(fields: [branchId], references: [id])
+  specialist       Specialist               @relation(fields: [specialistId], references: [id])
+  branch           Branch                   @relation(fields: [branchId], references: [id])
   payment          Payment?
+  services         AppointmentService[]
+
 
 
   @@index([appointmentDate])

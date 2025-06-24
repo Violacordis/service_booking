@@ -13,7 +13,7 @@ export class SpecialistController {
 
   getSpecialists = async (req: Request, res: Response) => {
     const data = await this.specialistService.getSpecialists({
-      query: (req as any).validated,
+      query: (req as any).validated.query,
     });
     res.json(data);
   };

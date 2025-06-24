@@ -31,7 +31,7 @@ const config = {
   },
   jwt: {
     secret: env.require("JWT_SECRET"),
-    expiresIn: env("JWT_EXPIRES_IN", "1h"),
+    expiresIn: env("JWT_EXPIRES_IN", "24h"),
   },
   redis: {
     host: env("REDIS_HOST", "localhost"),
@@ -42,6 +42,15 @@ const config = {
     webhookSecret: env.require("STRIPE_WEBHOOK_SECRET"),
     publishableKey: env("STRIPE_PUBLISHABLE_KEY"),
     version: env("STRIPE_API_VERSION", "2025-05-28.basil"),
+  },
+  email: {
+    mailHost: env.require("MAIL_HOST"),
+    mailPort: Number(env.require("MAIL_PORT")),
+    auth: {
+      user: env.require("AUTH_MAIL_USER"),
+      pass: env.require("AUTH_MAIL_PASS"),
+    },
+    mailFrom: env.require("DEFAULT_FROM_EMAIL", "support@nailer.com"),
   },
 };
 
