@@ -14,7 +14,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Service {
+model Service {      
   id            String                   @id @default(uuid()) @db.Uuid
   name          String                   @db.VarChar(255)
   code          String                   @unique
@@ -144,6 +144,8 @@ model User {
   updatedAt     DateTime                 @default(now()) @updatedAt @db.Timestamp(6)
 
   appointments  Appointment[]
+  cartItems     CartItem[]
+
 
   @@index([email])
   @@map("users")
@@ -158,7 +160,7 @@ model Appointment {
   type             AppointmentType         @default(PERSONAL)
   status           AppointmentStatus       @default(PENDING)
   totalCost        Float                   @default(0.0)
-  currency         Currency                @default(usd)
+  currency         Currency                @default(gbp)
   notes            String?                 @db.VarChar(255) 
   cancelReason     String?                 @db.VarChar(255) 
   numberOfClients  Int?                    @default(1)
@@ -253,5 +255,60 @@ enum PaymentStatus {
   SUCCESS
   FAILED
 }
+
+
+//product shopping cart
+model ProductCategory {
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String    @unique @db.VarChar(255)
+  description String?   @db.VarChar(255)
+  code        String    @unique
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  items       ProductItem[]
+
+  @@index([name])
+  @@map("product_categories")
+}
+
+model ProductItem {
+  id            String           @id @default(uuid()) @db.Uuid
+  name          String           @db.VarChar(255)
+  description   String?          @db.VarChar(255)
+  code          String           @unique
+  price         Float            @default(0.0)
+  currency      Currency         @default(gbp)
+  imageUrl      String?
+  status        Boolean          @default(true)
+  categoryId    String           @db.Uuid
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  category      ProductCategory  @relation(fields: [categoryId], references: [id])
+  cartItems     CartItem[]
+
+  @@index([name])
+  @@index([code])
+  @@index([categoryId])
+  @@map("product_items")
+}
+
+model CartItem {
+  id            String       @id @default(uuid()) @db.Uuid
+  userId        String       @db.Uuid
+  productId     String       @db.Uuid
+  quantity      Int          @default(1)   
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  productItem   ProductItem  @relation(fields: [productId], references: [id])
+  user          User         @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([productId])
+  @@unique([userId, productId])
+  @@map("cart_items")
+  }
 
 
