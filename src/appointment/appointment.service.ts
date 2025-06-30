@@ -10,7 +10,7 @@ import { AppError } from "../common/errors/app.error";
 import logger from "../common/utilities/logger";
 
 export class AppointmentService {
-  async createPersonalBooking({
+  async bookAppointment({
     userId,
     serviceSelections,
     specialistId,
@@ -20,6 +20,7 @@ export class AppointmentService {
     notes,
     currency,
     numberOfClients,
+    type,
   }: {
     userId: string;
     serviceSelections: {
@@ -33,6 +34,7 @@ export class AppointmentService {
     notes?: string;
     currency: string;
     numberOfClients: number;
+    type?: AppointmentType;
   }) {
     // check if specialist exists in the branch
     const specialist = await prisma.specialist.findUnique({
@@ -82,7 +84,7 @@ export class AppointmentService {
       );
     }
 
-    return prisma.appointment.create({
+    const appointment = await prisma.appointment.create({
       data: {
         userId,
         specialistId,
@@ -92,6 +94,7 @@ export class AppointmentService {
         notes: notes ?? null,
         currency: currency as Currency,
         numberOfClients,
+        type,
         services: {
           create: serviceSelections.map(({ serviceId, categoryIds }) => ({
             service: { connect: { id: serviceId } },
@@ -111,6 +114,11 @@ export class AppointmentService {
         },
       },
     });
+
+    return {
+      message: "Appointment created successfully",
+      data: appointment,
+    };
   }
 
   async getUserAppointments(req: {
@@ -175,13 +183,11 @@ export class AppointmentService {
       }
 
       if (paymentStatus) {
-        if (paymentStatus) {
-          filters.payment = {
-            is: {
-              status: paymentStatus.toUpperCase() as PaymentStatus,
-            },
-          };
-        }
+        filters.payment = {
+          is: {
+            status: paymentStatus.toUpperCase() as PaymentStatus,
+          },
+        };
       }
 
       if (type) {

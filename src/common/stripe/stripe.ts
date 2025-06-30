@@ -2,6 +2,7 @@ import Stripe from "stripe";
 import config from "../config";
 import { AppError } from "../errors/app.error";
 import { Currency } from "../../../generated/prisma";
+import { StripePaymentIntentDTO } from "./stripe.dto";
 
 export class StripeService {
   private stripe: Stripe;
@@ -20,20 +21,24 @@ export class StripeService {
     );
   }
 
-  async createPaymentIntent(
-    appointmentId: string,
-    amount: number,
-    userId: string,
-    currency: Currency
-  ) {
+  async createPaymentIntent({
+    userId,
+    amount,
+    currency,
+    appointmentId,
+    orderId,
+  }: StripePaymentIntentDTO) {
     try {
       const paymentIntent = await this.stripe.paymentIntents.create({
         amount: amount * 100, // convert to smallest unit
         currency,
-        description: `Payment for appointment ${appointmentId} by user ${userId}`,
+        description: appointmentId
+          ? `Payment for appointment ${appointmentId} by user ${userId}`
+          : `Payment for order ${orderId} by user ${userId}`,
         payment_method_types: ["card"],
         metadata: {
-          appointmentId,
+          ...(appointmentId && { appointmentId }),
+          ...(orderId && { orderId }),
           userId,
         },
       });

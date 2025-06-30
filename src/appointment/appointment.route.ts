@@ -6,15 +6,21 @@ import {
   cancelAppointmentParamSchema,
   getUserAppointmentsQuerySchema,
   getUserAppointmentsParamSchemaWithUserId,
-  personalBookingSchema,
+  bookAppointmentSchema,
 } from "./appointment.validator";
 
 const router = Router();
 const controller = new AppointmentController();
 router.post(
   "/book-personal",
-  validate({ body: personalBookingSchema }),
+  validate({ body: bookAppointmentSchema }),
   controller.bookPersonalAppointment
+);
+
+router.post(
+  "/book-group",
+  validate({ body: bookAppointmentSchema }),
+  controller.bookGroupAppointment
 );
 router.get(
   "/",

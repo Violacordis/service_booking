@@ -29,6 +29,13 @@ export class CoreServiceController {
     res.json(data);
   };
 
+  getProductcategories = async (req: Request, res: Response) => {
+    const data = await this.productService.getProductCategories({
+      query: (req as any).validated.query,
+    });
+    res.json(data);
+  };
+
   getProductsById = async (req: Request, res: Response) => {
     const userId = req.user?.id;
     if (!userId) {

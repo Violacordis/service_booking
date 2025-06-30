@@ -1,22 +1,41 @@
 import { Request, Response } from "express";
 import { AppointmentService } from "./appointment.service";
-import { personalBookingSchema } from "./appointment.validator";
+import { bookAppointmentSchema } from "./appointment.validator";
 import { AppError } from "../common/errors/app.error";
+import { AppointmentType } from "../../generated/prisma";
 
 export class AppointmentController {
   private readonly appointmentService = new AppointmentService();
 
   bookPersonalAppointment = async (req: Request, res: Response) => {
-    const validated = personalBookingSchema.parse(req.body);
+    const validated = bookAppointmentSchema.parse(req.body);
 
     const userId = req.user?.id;
     if (!userId) {
       throw new AppError("Unauthorized!", 401);
     }
 
-    const data = await this.appointmentService.createPersonalBooking({
+    const data = await this.appointmentService.bookAppointment({
       userId,
       ...validated,
+      type: AppointmentType.PERSONAL,
+    });
+
+    res.json(data);
+  };
+
+  bookGroupAppointment = async (req: Request, res: Response) => {
+    const validated = bookAppointmentSchema.parse(req.body);
+
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new AppError("Unauthorized!", 401);
+    }
+
+    const data = await this.appointmentService.bookAppointment({
+      userId,
+      ...validated,
+      type: AppointmentType.GROUP,
     });
 
     res.json(data);

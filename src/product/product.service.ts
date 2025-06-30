@@ -133,8 +133,62 @@ export class ProductService {
         },
       };
     } catch (error: any) {
-      logger.error("Error fetching prodcts:", error);
+      logger.error("Error fetching products:", error);
       throw new AppError("Failed to fetch products!", 500);
+    }
+  };
+
+  getProductCategories = async (req: {
+    query: {
+      page?: 1 | undefined;
+      limit?: 10 | undefined;
+      term: any;
+      sortBy?: "createdAt" | undefined;
+    };
+  }) => {
+    try {
+      const { page = 1, limit = 10, term, sortBy = "createdAt" } = req.query;
+
+      const filters: any = {};
+
+      if (term) {
+        const searchTerm = term.toString().trim();
+        filters.OR = [{ name: { contains: searchTerm, mode: "insensitive" } }];
+      }
+
+      const [total, productCategories] = await Promise.all([
+        prismaService.productCategory.count({ where: filters }),
+        prismaService.productCategory.findMany({
+          where: filters,
+          skip: (Number(page) - 1) * Number(limit),
+          take: Number(limit),
+          orderBy: { [sortBy.toString()]: "desc" },
+          include: {
+            items: {
+              select: {
+                id: true,
+                name: true,
+                description: true,
+                code: true,
+              },
+            },
+          },
+        }),
+      ]);
+
+      return {
+        message: "Product categories fetched successfully",
+        data: productCategories,
+        meta: {
+          total,
+          page: Number(page),
+          pageSize: Number(limit),
+          totalPages: Math.ceil(total / Number(limit)),
+        },
+      };
+    } catch (error: any) {
+      logger.error("Error fetching product categories:", error);
+      throw new AppError("Failed to fetch product categories!", 500);
     }
   };
 

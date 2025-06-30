@@ -4,4 +4,8 @@ const AppointmentPaymentSchema = z.object({
   appointmentId: z.string().uuid(),
 });
 
-export { AppointmentPaymentSchema };
+const CheckOutOrderPaymentSchema = z.object({
+  orderId: z.string().uuid(),
+});
+
+export { AppointmentPaymentSchema, CheckOutOrderPaymentSchema };

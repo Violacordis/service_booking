@@ -4,6 +4,7 @@ import { CoreServiceController } from "./product.controller";
 import { authenticate } from "../common/middleware/authenticate.middleware";
 import {
   createProductsSchema,
+  getProductCategoriesQuerySchema,
   getProductItemParamSchemaWithUserId,
   getProductsQuerySchema,
 } from "./product.validator";
@@ -21,6 +22,13 @@ router.get(
   validate({ query: getProductsQuerySchema }),
   controller.getProducts
 );
+router.get(
+  "/categories",
+  authenticate,
+  validate({ query: getProductCategoriesQuerySchema }),
+  controller.getProductcategories
+);
+
 router.get(
   "/:id",
   authenticate,
