@@ -1,0 +1,41 @@
+import { Router } from "express";
+import { validate } from "../common/middleware/validate.middleware";
+import { authenticate } from "../common/middleware/authenticate.middleware";
+import { OrderController } from "./order.controller";
+import {
+  cancelOrderBodySchema,
+  cancelOrderParamSchema,
+  getUserOrderParamSchemaWithUserId,
+  getUserOrdersSchema,
+} from "./order.validator";
+
+const router = Router();
+const controller = new OrderController();
+
+router.get(
+  "/",
+  authenticate,
+  validate({ query: getUserOrdersSchema }),
+  controller.getUserOrders
+);
+router.get(
+  "/:id",
+  validate({ params: getUserOrderParamSchemaWithUserId }),
+  controller.getUserOrderId
+);
+
+router.get(
+  "/item/:id",
+  validate({ params: getUserOrderParamSchemaWithUserId }),
+  controller.getUserOrderItemId
+);
+
+router.patch(
+  "/:id/cancel",
+  validate({
+    params: cancelOrderParamSchema,
+    body: cancelOrderBodySchema.optional(),
+  }),
+  controller.cancelAppointment
+);
+export default router;

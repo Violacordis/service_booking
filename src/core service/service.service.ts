@@ -61,7 +61,7 @@ export class CoreService {
         data: createdServices,
       };
     } catch (error: any) {
-      logger.error("Error creating branches:", error);
+      logger.error("Error creating services:", error);
       throw new AppError("Failed to create services!", 500);
     }
   };

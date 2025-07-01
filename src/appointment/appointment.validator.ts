@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { AppointmentStatus } from "../../generated/prisma";
 
-const personalBookingSchema = z.object({
+const bookAppointmentSchema = z.object({
   serviceSelections: z
     .array(
       z.object({
@@ -20,7 +20,7 @@ const personalBookingSchema = z.object({
   totalCost: z.number().min(0, "Total cost must be a positive number"),
   numberOfClients: z.number().int().min(1, "At least one client is required"),
   notes: z.string().optional(),
-  currency: z.enum(["usd", "eur", "gbp", "ngn"]).default("usd"),
+  currency: z.enum(["usd", "eur", "gbp", "ngn"]).default("gbp"),
 });
 
 const getUserAppointmentsQuerySchema = z.object({
@@ -102,7 +102,7 @@ const cancelAppointmentBodySchema = z.object({
 });
 
 export {
-  personalBookingSchema,
+  bookAppointmentSchema,
   getUserAppointmentsQuerySchema,
   getUserAppointmentsParamSchemaWithUserId,
   cancelAppointmentParamSchema,

@@ -14,7 +14,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Service {
+model Service {      
   id            String                   @id @default(uuid()) @db.Uuid
   name          String                   @db.VarChar(255)
   code          String                   @unique
@@ -144,6 +144,9 @@ model User {
   updatedAt     DateTime                 @default(now()) @updatedAt @db.Timestamp(6)
 
   appointments  Appointment[]
+  cartItems     CartItem[]
+  orders        Order[]
+
 
   @@index([email])
   @@map("users")
@@ -158,7 +161,7 @@ model Appointment {
   type             AppointmentType         @default(PERSONAL)
   status           AppointmentStatus       @default(PENDING)
   totalCost        Float                   @default(0.0)
-  currency         Currency                @default(usd)
+  currency         Currency                @default(gbp)
   notes            String?                 @db.VarChar(255) 
   cancelReason     String?                 @db.VarChar(255) 
   numberOfClients  Int?                    @default(1)
@@ -233,17 +236,20 @@ model AppointmentServiceCategory {
 
 model Payment {
   id            String                   @id @default(uuid()) @db.Uuid
-  appointmentId String                   @db.Uuid @unique
+  appointmentId String?                  @db.Uuid @unique
+  orderId       String?                  @db.Uuid @unique
   amount        Float                    @default(0.0)
-  currency      String?                   
+  currency      String
   status        PaymentStatus            @default(PENDING)
   intentId      String?                  @db.VarChar(255) 
   createdAt     DateTime                 @default(now()) @db.Timestamp(6)
   updatedAt     DateTime                 @default(now()) @updatedAt @db.Timestamp(6)
 
-  appointment   Appointment              @relation(fields: [appointmentId], references: [id])
+  appointment   Appointment?             @relation(fields: [appointmentId], references: [id])
+  order         Order?                   @relation(fields: [orderId], references: [id])
 
   @@index([appointmentId])
+  @@index([orderId])
   @@index([status])
   @@map("payments")
 }
@@ -253,5 +259,104 @@ enum PaymentStatus {
   SUCCESS
   FAILED
 }
+
+
+//product shopping cart
+model ProductCategory {
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String    @unique @db.VarChar(255)
+  description String?   @db.VarChar(255)
+  code        String    @unique
+  createdAt   DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime   @default(now()) @updatedAt @db.Timestamp(6)
+
+  items       ProductItem[]
+
+  @@index([name])
+  @@map("product_categories")
+}
+
+model ProductItem {
+  id            String           @id @default(uuid()) @db.Uuid
+  name          String           @db.VarChar(255)
+  description   String?          @db.VarChar(255)
+  code          String           @unique
+  price         Float            @default(0.0)
+  currency      Currency         @default(gbp)
+  imageUrl      String?
+  status        Boolean          @default(true)
+  categoryId    String           @db.Uuid
+  createdAt     DateTime         @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime         @default(now()) @updatedAt @db.Timestamp(6)
+
+  category      ProductCategory  @relation(fields: [categoryId], references: [id])
+  cartItems     CartItem[]
+  orders        OrderItem[]
+
+  @@index([name])
+  @@index([code])
+  @@index([categoryId])
+  @@map("product_items")
+}
+
+model CartItem {
+  id            String       @id @default(uuid()) @db.Uuid
+  userId        String       @db.Uuid
+  productId     String       @db.Uuid
+  quantity      Int          @default(1)   
+  createdAt     DateTime     @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime     @default(now()) @updatedAt @db.Timestamp(6)
+
+  productItem   ProductItem  @relation(fields: [productId], references: [id])
+  user          User         @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([productId])
+  @@unique([userId, productId])
+  @@map("cart_items")
+  }
+
+  model Order {
+  id          String       @id @default(uuid()) @db.Uuid
+  userId      String       @db.Uuid
+  totalAmount Float
+  code        String       @unique
+  note        String?      @db.VarChar(255)
+  currency    Currency     @default(gbp)
+  status      OrderStatus  @default(PENDING)
+  cancelReason String?     @db.VarChar(255)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @default(now()) @updatedAt @db.Timestamp(6)
+  items       OrderItem[]
+  user        User         @relation(fields: [userId], references: [id])
+  payment     Payment?     
+  
+
+  @@index([userId])
+  @@map("orders")
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+model OrderItem {
+  id          String       @id @default(uuid()) @db.Uuid
+  orderId     String       @db.Uuid
+  productId   String       @db.Uuid
+  quantity    Int
+  price       Float      
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @default(now()) @updatedAt @db.Timestamp(6)
+  product     ProductItem  @relation(fields: [productId], references: [id])
+  order       Order        @relation(fields: [orderId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
 
 
