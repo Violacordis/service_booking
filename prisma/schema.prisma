@@ -324,6 +324,7 @@ model CartItem {
   note        String?      @db.VarChar(255)
   currency    Currency     @default(gbp)
   status      OrderStatus  @default(PENDING)
+  cancelReason String?     @db.VarChar(255)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @default(now()) @updatedAt @db.Timestamp(6)
   items       OrderItem[]

@@ -44,4 +44,20 @@ const getUserOrdersSchema = z.object({
     .optional(),
 });
 
-export { getUserOrdersSchema };
+const getUserOrderParamSchemaWithUserId = z.object({
+  id: z.string().uuid({ message: "Order ID must be a valid UUID" }),
+});
+
+const cancelOrderParamSchema = z.object({
+  id: z.string().uuid({ message: "Order ID must be a valid UUID" }),
+});
+const cancelOrderBodySchema = z.object({
+  reason: z.string().optional(),
+});
+
+export {
+  getUserOrdersSchema,
+  getUserOrderParamSchemaWithUserId,
+  cancelOrderParamSchema,
+  cancelOrderBodySchema,
+};

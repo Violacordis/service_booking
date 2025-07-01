@@ -82,4 +82,114 @@ export class OrderService {
       throw new AppError("Failed to fetch user orders!", 500);
     }
   };
+
+  async getUserOrderById(orderId: string, userId: string) {
+    try {
+      const order = await prismaService.order.findFirst({
+        where: {
+          id: orderId,
+          userId,
+        },
+        include: {
+          items: true,
+          user: {
+            select: {
+              fullName: true,
+              email: true,
+            },
+          },
+          payment: {
+            select: {
+              id: true,
+              amount: true,
+              currency: true,
+              status: true,
+            },
+          },
+        },
+      });
+
+      if (!order) {
+        throw new AppError("Order not found", 404);
+      }
+
+      return order;
+    } catch (error) {
+      logger.error("Error fetching order by ID:", error);
+      throw new AppError("Failed to fetch order", 500);
+    }
+  }
+
+  async getUserOrderItemById(itemId: string, userId: string) {
+    try {
+      const item = await prismaService.orderItem.findFirst({
+        where: {
+          id: itemId,
+          order: {
+            userId,
+          },
+        },
+        include: {
+          order: {
+            include: {
+              user: { select: { fullName: true, email: true, address: true } },
+              payment: {
+                select: {
+                  id: true,
+                  amount: true,
+                  currency: true,
+                  status: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!item) {
+        throw new AppError("Order Item not found", 404);
+      }
+
+      return item;
+    } catch (error) {
+      logger.error("Error fetching order item by ID:", error);
+      throw new AppError("Failed to fetch order item", 500);
+    }
+  }
+
+  async cancelOrder(orderId: string, userId: string, reason?: string) {
+    try {
+      const order = await prismaService.order.findFirst({
+        where: { id: orderId, userId },
+      });
+
+      if (!order) {
+        throw new AppError("Order not found", 404);
+      }
+
+      if (order.status === OrderStatus.CANCELLED) {
+        throw new AppError("Order is already cancelled", 400);
+      }
+
+      if (order.status === OrderStatus.COMPLETED) {
+        throw new AppError(
+          "Cannot cancel a paid and completed order. Please contact support.",
+          400
+        );
+      }
+
+      return prismaService.order.update({
+        where: { id: orderId },
+        data: {
+          status: OrderStatus.CANCELLED,
+          cancelReason: reason ?? null,
+        },
+      });
+    } catch (error) {
+      logger.error("Error cancelling order:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      throw new AppError(`Failed to cancel order: ${errorMessage}`, 500);
+    }
+  }
 }

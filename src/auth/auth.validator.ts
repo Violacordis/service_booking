@@ -25,4 +25,15 @@ const loginSchema = z.object({
   password,
 });
 
-export { signupSchema, loginSchema };
+// Login schema
+const forgotPasswordSchema = z.object({
+  email,
+});
+
+//Reset password
+const resetPasswordSchema = z.object({
+  token: z.string().length(6, "OTP must be exactly 6 characters"),
+  newPassword: password,
+});
+
+export { signupSchema, loginSchema, forgotPasswordSchema, resetPasswordSchema };
