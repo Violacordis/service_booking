@@ -28,10 +28,17 @@ export class AuthService {
         fullName,
         email,
         password: hashed,
+        phone,
+      },
+    });
+
+    await prisma.address.create({
+      data: {
+        userId: user.id,
         address,
         state,
         country,
-        phone,
+        isDefault: true,
       },
     });
 
@@ -136,6 +143,23 @@ export class AuthService {
     return {
       message: "Password reset successful",
     };
+  }
+
+  async changePassword(
+    userId: string,
+    oldPassword: string,
+    newPassword: string
+  ) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new AppError("User not found", 404);
+    const match = await bcrypt.compare(oldPassword, user.password);
+    if (!match) throw new AppError("Old password is incorrect", 400);
+    const hashed = await bcrypt.hash(newPassword, 10);
+    await prisma.user.update({
+      where: { id: userId },
+      data: { password: hashed },
+    });
+    return { message: "Password changed successfully" };
   }
 
   static generateToken(userId: string) {

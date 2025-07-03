@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { AuthService } from "./auth.service";
 import { EmailService } from "../common/mailer";
+import { AppError } from "../common/errors/app.error";
+import { changePasswordSchema } from "./auth.validator";
 
 export class AuthController {
   private readonly authService = new AuthService();
@@ -45,6 +47,21 @@ export class AuthController {
       this.emailService
     );
 
+    res.json(data);
+  };
+
+  changePassword = async (req: Request, res: Response) => {
+    const userId = req.user?.id;
+    if (!userId) throw new AppError("Unauthorized!", 401);
+    const result = changePasswordSchema.safeParse(req.body);
+    if (!result.success)
+      throw new AppError(result.error.errors[0].message, 400);
+    const { oldPassword, newPassword } = result.data;
+    const data = await this.authService.changePassword(
+      userId,
+      oldPassword,
+      newPassword
+    );
     res.json(data);
   };
 }
