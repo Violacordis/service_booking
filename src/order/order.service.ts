@@ -132,7 +132,9 @@ export class OrderService {
         include: {
           order: {
             include: {
-              user: { select: { fullName: true, email: true, address: true } },
+              user: {
+                select: { fullName: true, email: true, addresses: true },
+              },
               payment: {
                 select: {
                   id: true,
