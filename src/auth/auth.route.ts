@@ -7,6 +7,8 @@ import {
   resetPasswordSchema,
   signupSchema,
 } from "./auth.validator";
+import { authenticate } from "../common/middleware/authenticate.middleware";
+
 const router = Router();
 const controller = new AuthController();
 
@@ -22,5 +24,6 @@ router.post(
   validate({ body: resetPasswordSchema }),
   controller.resetPassword
 );
+router.post("/change-password", authenticate, controller.changePassword);
 
 export default router;
