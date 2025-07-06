@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { validate } from "../common/middleware/validate.middleware";
-import { CoreServiceController } from "./service.controller";
+import { validate } from "../common/middleware/validate.middleware.js";
+import { CoreServiceController } from "./service.controller.js";
 import {
   createServicesSchema,
   getServicesQuerySchema,
-} from "./service.validator";
-import { authenticate } from "../common/middleware/authenticate.middleware";
+} from "./service.validator.js";
+import { authenticate } from "../common/middleware/authenticate.middleware.js";
 const router = Router();
 const controller = new CoreServiceController();
 

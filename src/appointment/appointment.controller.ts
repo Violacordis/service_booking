@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { AppointmentService } from "./appointment.service";
-import { bookAppointmentSchema } from "./appointment.validator";
-import { AppError } from "../common/errors/app.error";
-import { AppointmentType } from "../../generated/prisma";
+import { AppointmentService } from "./appointment.service.js";
+import { bookAppointmentSchema } from "./appointment.validator.js";
+import { AppError } from "../common/errors/app.error.js";
+import { AppointmentType } from "../../generated/prisma/index.js";
 
 export class AppointmentController {
   private readonly appointmentService = new AppointmentService();
@@ -17,7 +17,17 @@ export class AppointmentController {
 
     const data = await this.appointmentService.bookAppointment({
       userId,
-      ...validated,
+      serviceSelections: validated.serviceSelections as {
+        serviceId: string;
+        categoryIds: string[];
+      }[],
+      specialistId: validated.specialistId,
+      appointmentDateTime: validated.appointmentDateTime,
+      branchId: validated.branchId,
+      totalCost: validated.totalCost,
+      notes: validated.notes,
+      currency: validated.currency,
+      numberOfClients: validated.numberOfClients,
       type: AppointmentType.PERSONAL,
     });
 
@@ -34,7 +44,17 @@ export class AppointmentController {
 
     const data = await this.appointmentService.bookAppointment({
       userId,
-      ...validated,
+      serviceSelections: validated.serviceSelections as {
+        serviceId: string;
+        categoryIds: string[];
+      }[],
+      specialistId: validated.specialistId,
+      appointmentDateTime: validated.appointmentDateTime,
+      branchId: validated.branchId,
+      totalCost: validated.totalCost,
+      notes: validated.notes,
+      currency: validated.currency,
+      numberOfClients: validated.numberOfClients,
       type: AppointmentType.GROUP,
     });
 

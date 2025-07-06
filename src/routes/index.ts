@@ -1,15 +1,15 @@
 import { Router } from "express";
-import branchRoutes from "../branch/branch.route";
-import serviceRoutes from "../core service/service.route";
-import specialistRoutes from "../specialist/specialist.route";
-import { authenticate } from "../common/middleware/authenticate.middleware";
-import authRoutes from "../auth/auth.route";
-import appointmentRoutes from "../appointment/appointment.route";
-import paymentRoutes from "../payment/payment.route";
-import productRoutes from "../product/product.route";
-import cartRoute from "../cart/cart.route";
-import orderRoutes from "../order/order.route";
-import addressRoutes from "../address/address.route";
+import branchRoutes from "../branch/branch.route.js";
+import serviceRoutes from "../core service/service.route.js";
+import specialistRoutes from "../specialist/specialist.route.js";
+import { authenticate } from "../common/middleware/authenticate.middleware.js";
+import authRoutes from "../auth/auth.route.js";
+import appointmentRoutes from "../appointment/appointment.route.js";
+import paymentRoutes from "../payment/payment.route.js";
+import productRoutes from "../product/product.route.js";
+import cartRoute from "../cart/cart.route.js";
+import orderRoutes from "../order/order.route.js";
+import addressRoutes from "../address/address.route.js";
 const router = Router();
 
 router.use("/auth", authRoutes);

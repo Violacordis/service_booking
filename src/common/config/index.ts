@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-import { version } from "os";
 
 dotenv.config();
 

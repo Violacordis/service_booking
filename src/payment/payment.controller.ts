@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { PaymentService } from "./payment.service";
-import { AppError } from "../common/errors/app.error";
+import { PaymentService } from "./payment.service.js";
+import { AppError } from "../common/errors/app.error.js";
 import {
   AppointmentPaymentSchema,
   CheckOutOrderPaymentSchema,
-} from "./payment.validator";
+} from "./payment.validator.js";
 
 export class PaymentController {
   private readonly paymentService = new PaymentService();

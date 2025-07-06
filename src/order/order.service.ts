@@ -1,7 +1,7 @@
-import prismaService from "../../db/prisma";
-import { OrderStatus } from "../../generated/prisma";
-import { AppError } from "../common/errors/app.error";
-import logger from "../common/utilities/logger/index";
+import prismaService from "../../db/prisma.js";
+import { OrderStatus } from "../../generated/prisma/index.js";
+import { AppError } from "../common/errors/app.error.js";
+import logger from "../common/utilities/logger/index.js";
 
 export class OrderService {
   getUserOrders = async (req: {

@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import { SpecialistService } from "./specialist.service";
-
+import { SpecialistService } from "./specialist.service.js";
 export class SpecialistController {
   private readonly specialistService = new SpecialistService();
 

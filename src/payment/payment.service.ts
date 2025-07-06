@@ -1,14 +1,13 @@
-import { AppError } from "../common/errors/app.error";
-import { StripeService } from "../common/stripe/stripe";
-import prisma from "../../db/prisma";
+import { AppError } from "../common/errors/app.error.js";
+import { StripeService } from "../common/stripe/stripe.js";
+import prisma from "../../db/prisma.js";
 import {
   AppointmentStatus,
   Currency,
   OrderStatus,
   PaymentStatus,
-} from "../../generated/prisma";
-import app from "../app";
-import logger from "../common/utilities/logger";
+} from "../../generated/prisma/index.js";
+import logger from "../common/utilities/logger/index.js";
 
 export class PaymentService {
   private stripeService = new StripeService();

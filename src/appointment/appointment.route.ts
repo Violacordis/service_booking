@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { validate } from "../common/middleware/validate.middleware";
-import { AppointmentController } from "./appointment.controller";
+import { validate } from "../common/middleware/validate.middleware.js";
+import { AppointmentController } from "./appointment.controller.js";
 import {
   cancelAppointmentBodySchema,
   cancelAppointmentParamSchema,
   getUserAppointmentsQuerySchema,
   getUserAppointmentsParamSchemaWithUserId,
   bookAppointmentSchema,
-} from "./appointment.validator";
+} from "./appointment.validator.js";
 
 const router = Router();
 const controller = new AppointmentController();

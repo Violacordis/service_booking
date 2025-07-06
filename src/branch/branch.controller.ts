@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { BranchService } from "./branch.service";
+import { BranchService } from "./branch.service.js";
 
 export class BranchController {
   private readonly branchService = new BranchService();

@@ -1,11 +1,11 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import prisma from "../../db/prisma";
-import { AppError } from "../common/errors/app.error";
-import config from "../common/config";
-import redis from "../common/cache";
-import { generateOtpCode } from "../common/utilities/app.utilities";
-import { EmailService } from "../common/mailer";
+import prisma from "../../db/prisma.js";
+import { AppError } from "../common/errors/app.error.js";
+import config from "../common/config/index.js";
+import redis from "../common/cache/index.js";
+import { generateOtpCode } from "../common/utilities/app.utilities.js";
+import { EmailService } from "../common/mailer.js";
 
 const JWT_SECRET = config.jwt.secret || process.env.JWT_SECRET;
 

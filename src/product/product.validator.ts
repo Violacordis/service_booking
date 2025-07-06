@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { Currency } from "../../generated/prisma";
 
 const productSchema = z.object({
   name: z.string().min(1, "Name is required"),

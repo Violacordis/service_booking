@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { AppError } from "../common/errors/app.error";
+import { AppError } from "../common/errors/app.error.js";
 import {
   AddToCartSchema,
   checkoutOrderSchema,
   updateCartItemBodySchema,
-} from "./cart.validator";
-import { CartService } from "./cart.service";
+} from "./cart.validator.js";
+import { CartService } from "./cart.service.js";
 
 export class CartController {
   private readonly cartService = new CartService();

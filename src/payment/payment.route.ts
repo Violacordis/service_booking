@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { validate } from "../common/middleware/validate.middleware";
-import { PaymentController } from "./payment.controller";
+import { validate } from "../common/middleware/validate.middleware.js";
+import { PaymentController } from "./payment.controller.js";
 import {
   AppointmentPaymentSchema,
   CheckOutOrderPaymentSchema,
-} from "./payment.validator";
+} from "./payment.validator.js";
 
 const router = Router();
 const controller = new PaymentController();

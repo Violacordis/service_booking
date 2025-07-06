@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { OrderService } from "./order.service";
-import { AppError } from "../common/errors/app.error";
+import { OrderService } from "./order.service.js";
+import { AppError } from "../common/errors/app.error.js";
 
 export class OrderController {
   private readonly orderService = new OrderService();

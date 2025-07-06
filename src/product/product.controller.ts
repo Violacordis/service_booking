@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { ProductService } from "./product.service";
-import { AppError } from "../common/errors/app.error";
+import { ProductService } from "./product.service.js";
+import { AppError } from "../common/errors/app.error.js";
 
 export class CoreServiceController {
   private readonly productService = new ProductService();

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { OrderStatus } from "../../generated/prisma";
+import { OrderStatus } from "../../generated/prisma/index.js";
 
 const AddToCartSchema = z.object({
   productId: z.string().uuid({ message: "Product ID must be a valid UUID" }),

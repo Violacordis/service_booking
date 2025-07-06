@@ -1,11 +1,41 @@
+// {
+//   "compilerOptions": {
+//     "target": "es2019",
+//     "module": "commonjs",
+//     "outDir": "./dist",
+//     "strict": false,
+//     "esModuleInterop": true,
+//     "skipLibCheck": true,
+//     "noImplicitAny": false,
+//     "noImplicitReturns": false,
+//     "noFallthroughCasesInSwitch": false,
+//     "noImplicitOverride": false,
+//     "noImplicitThis": false,
+//     "exactOptionalPropertyTypes": false,
+//     "resolveJsonModule": true,
+//     "moduleResolution": "node",
+//     "allowSyntheticDefaultImports": true,
+//     "experimentalDecorators": true,
+//     "emitDecoratorMetadata": true,
+//     "forceConsistentCasingInFileNames": false
+//   },
+//   "include": ["src/**/*", "db/**/*", "generated/**/*"]
+// }
+
 {
   "compilerOptions": {
-    "target": "es2019",
-    "module": "commonjs",
+    "target": "ES2020",                     // ESM requires modern target
+    "module": "ESNext",                     // Enables ESM
     "outDir": "./dist",
-    "strict": true,
+    "moduleResolution": "node",
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "strict": false,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": false
   },
-  "include": ["src"]
+  "include": ["src/**/*", "db/**/*", "generated/**/*"]
 }

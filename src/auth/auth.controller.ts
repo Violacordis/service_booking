@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { AuthService } from "./auth.service";
-import { EmailService } from "../common/mailer";
-import { AppError } from "../common/errors/app.error";
-import { changePasswordSchema } from "./auth.validator";
+import { AuthService } from "./auth.service.js";
+import { EmailService } from "../common/mailer.js";
+import { AppError } from "../common/errors/app.error.js";
+import { changePasswordSchema } from "./auth.validator.js";
 
 export class AuthController {
   private readonly authService = new AuthService();
