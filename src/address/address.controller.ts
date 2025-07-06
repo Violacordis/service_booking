@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { AddressService } from "./address.service";
+import { AddressService } from "./address.service.js";
 import {
   createAddressSchema,
   updateAddressSchema,
   idParamSchema,
-} from "./address.validator";
-import { AppError } from "../common/errors/app.error";
+} from "./address.validator.js";
+import { AppError } from "../common/errors/app.error.js";
 
 export class AddressController {
   private readonly addressService = new AddressService();

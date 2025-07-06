@@ -1,11 +1,15 @@
 import * as nodemailer from "nodemailer";
 import path from "path";
-import config from "./config";
-import logger from "./utilities/logger";
+import { fileURLToPath } from "url";
+import config from "./config/index.js";
+import logger from "./utilities/logger/index.js";
 import handlebars from "handlebars";
 import fs from "fs";
-import { EmailTemplate } from "./types/email/email.types";
-import { AppError } from "./errors/app.error";
+import { EmailTemplate } from "./types/email/email.types.js";
+import { AppError } from "./errors/app.error.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export class EmailService {
   private transporter: any;

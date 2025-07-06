@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { OrderStatus } from "../../generated/prisma";
+import { OrderStatus } from "../../generated/prisma/index.js";
 
 const getUserOrdersSchema = z.object({
   page: z

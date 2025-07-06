@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import logger from "../utilities/logger";
+import logger from "../utilities/logger/index.js";
 
 export class RequestInterceptor {
   handle(req: Request, res: Response, next: NextFunction) {

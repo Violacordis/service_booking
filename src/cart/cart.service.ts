@@ -1,8 +1,8 @@
-import prismaService from "../../db/prisma";
-import { Currency } from "../../generated/prisma";
-import { AppError } from "../common/errors/app.error";
-import { generateShortCode } from "../common/utilities/app.utilities";
-import logger from "../common/utilities/logger/index";
+import prismaService from "../../db/prisma.js";
+import { Currency } from "../../generated/prisma/index.js";
+import { AppError } from "../common/errors/app.error.js";
+import { generateShortCode } from "../common/utilities/app.utilities.js";
+import logger from "../common/utilities/logger/index.js";
 
 export class CartService {
   addToCart = async (id: string, quantity: number, userId: string) => {

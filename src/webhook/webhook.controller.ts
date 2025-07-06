@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { StripeService } from "../common/stripe/stripe";
-import logger from "../common/utilities/logger";
-import { WebhookService } from "./webhook.service";
-import { EmailService } from "../common/mailer";
+import { StripeService } from "../common/stripe/stripe.js";
+import logger from "../common/utilities/logger/index.js";
+import { WebhookService } from "./webhook.service.js";
+import { EmailService } from "../common/mailer.js";
 
 export class WebhookController {
   private stripeService = new StripeService();

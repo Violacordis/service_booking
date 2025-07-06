@@ -1,6 +1,6 @@
-import prismaService from "../../db/prisma";
-import { AppError } from "../common/errors/app.error";
-import logger from "../common/utilities/logger";
+import prismaService from "../../db/prisma.js";
+import { AppError } from "../common/errors/app.error.js";
+import logger from "../common/utilities/logger/index.js";
 
 export class SpecialistService {
   async addSpecialists(

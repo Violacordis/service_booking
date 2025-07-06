@@ -1,8 +1,7 @@
 import Stripe from "stripe";
-import config from "../config";
-import { AppError } from "../errors/app.error";
-import { Currency } from "../../../generated/prisma";
-import { StripePaymentIntentDTO } from "./stripe.dto";
+import config from "../config/index.js";
+import { AppError } from "../errors/app.error.js";
+import { StripePaymentIntentDTO } from "./stripe.dto.js";
 
 export class StripeService {
   private stripe: Stripe;

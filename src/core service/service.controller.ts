@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CoreService } from "./service.service";
+import { CoreService } from "./service.service.js";
 
 export class CoreServiceController {
   private readonly coreService = new CoreService();

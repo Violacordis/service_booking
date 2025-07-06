@@ -1,5 +1,5 @@
-import prisma from "../../db/prisma";
-import { AppError } from "../common/errors/app.error";
+import prisma from "../../db/prisma.js";
+import { AppError } from "../common/errors/app.error.js";
 
 export class AddressService {
   async createAddress(

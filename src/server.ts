@@ -1,7 +1,7 @@
-import app from "./app";
-import { connectToDatabase } from "../db/prisma";
-import logger from "./common/utilities/logger";
-import config from "./common/config";
+import app from "./app.js";
+import { connectToDatabase } from "../db/prisma.js";
+import logger from "./common/utilities/logger/index.js";
+import config from "./common/config/index.js";
 
 const port = config.app.port;
 const nodeEnv = config.app.environment;

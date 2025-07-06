@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { AppError } from "../errors/app.error";
+import { AppError } from "../errors/app.error.js";
 import jwt from "jsonwebtoken";
-import logger from "../utilities/logger";
+import logger from "../utilities/logger/index.js";
 
 export const authenticate = (
   req: Request,

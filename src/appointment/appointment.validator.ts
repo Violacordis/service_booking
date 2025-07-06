@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AppointmentStatus } from "../../generated/prisma";
+import { AppointmentStatus } from "../../generated/prisma/index.js";
 
 const bookAppointmentSchema = z.object({
   serviceSelections: z

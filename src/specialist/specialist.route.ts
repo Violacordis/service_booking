@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { validate } from "../common/middleware/validate.middleware";
-import { SpecialistController } from "./specialist.controller";
+import { validate } from "../common/middleware/validate.middleware.js";
+import { SpecialistController } from "./specialist.controller.js";
 import {
   createSpecialistsSchema,
   getSpecialistsQuerySchema,
-} from "./specialist.validator";
-import { authenticate } from "../common/middleware/authenticate.middleware";
+} from "./specialist.validator.js";
+import { authenticate } from "../common/middleware/authenticate.middleware.js";
 const router = Router();
 
 const controller = new SpecialistController();

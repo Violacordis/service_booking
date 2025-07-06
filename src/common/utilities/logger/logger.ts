@@ -1,10 +1,14 @@
-import winston from 'winston';
-import path from 'path';
-import fs from 'fs';
+import winston from "winston";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
 
-const logDir = path.resolve(__dirname, '../../../../logs');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const logDir = path.resolve(__dirname, "../../../../logs");
 if (!fs.existsSync(logDir)) {
-  fs.mkdirSync(logDir);
+  fs.mkdirSync(logDir, { recursive: true });
 }
 
 const levels = {
@@ -16,17 +20,17 @@ const levels = {
 };
 
 winston.addColors({
-  error: 'bold red',
-  warn: 'yellow',
-  info: 'green',
-  http: 'magenta',
-  debug: 'cyan',
+  error: "bold red",
+  warn: "yellow",
+  info: "green",
+  http: "magenta",
+  debug: "cyan",
 });
 
 const { combine, timestamp, printf, colorize, errors } = winston.format;
 
 const logFormat = printf(({ level, message, timestamp, context }) => {
-  return `[${timestamp}] ${level} ${context ? `[${context}]` : ''}: ${message}`;
+  return `[${timestamp}] ${level} ${context ? `[${context}]` : ""}: ${message}`;
 });
 
 export class Logger {
@@ -35,10 +39,10 @@ export class Logger {
   constructor(context?: string) {
     this.logger = winston.createLogger({
       levels,
-      level: 'debug',
+      level: "debug",
       format: combine(
         colorize({ all: true }),
-        timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+        timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
         errors({ stack: true }),
         logFormat
       ),
@@ -47,12 +51,12 @@ export class Logger {
           format: combine(colorize(), logFormat),
         }),
         new winston.transports.File({
-          filename: path.join(logDir, 'app.log'),
-          level: 'debug',
+          filename: path.join(logDir, "app.log"),
+          level: "debug",
         }),
         new winston.transports.File({
-          filename: path.join(logDir, 'error.log'),
-          level: 'error',
+          filename: path.join(logDir, "error.log"),
+          level: "error",
         }),
       ],
     });

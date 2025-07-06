@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { AddressController } from "./address.controller";
-import { validate } from "../common/middleware/validate.middleware";
+import { AddressController } from "./address.controller.js";
+import { validate } from "../common/middleware/validate.middleware.js";
 import {
   createAddressSchema,
   idParamSchema,
   updateAddressSchema,
-} from "./address.validator";
+} from "./address.validator.js";
 
 const router = Router();
 const controller = new AddressController();

@@ -1,12 +1,12 @@
 import Stripe from "stripe";
-import prisma from "../../db/prisma";
+import prisma from "../../db/prisma.js";
 import {
   AppointmentStatus,
   OrderStatus,
   PaymentStatus,
-} from "../../generated/prisma";
-import logger from "../common/utilities/logger";
-import { EmailService } from "../common/mailer";
+} from "../../generated/prisma/index.js";
+import logger from "../common/utilities/logger/index.js";
+import { EmailService } from "../common/mailer.js";
 
 export class WebhookService {
   async handlePaymentIntentInitiate(

@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { validate } from "../common/middleware/validate.middleware";
-import { authenticate } from "../common/middleware/authenticate.middleware";
-import { OrderController } from "./order.controller";
+import { validate } from "../common/middleware/validate.middleware.js";
+import { authenticate } from "../common/middleware/authenticate.middleware.js";
+import { OrderController } from "./order.controller.js";
 import {
   cancelOrderBodySchema,
   cancelOrderParamSchema,
   getUserOrderParamSchemaWithUserId,
   getUserOrdersSchema,
-} from "./order.validator";
+} from "./order.validator.js";
 
 const router = Router();
 const controller = new OrderController();

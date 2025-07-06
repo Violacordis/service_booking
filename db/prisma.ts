@@ -1,7 +1,9 @@
-import { PrismaClient } from "../generated/prisma";
-import logger from "../src/common/utilities/logger";
+import { PrismaClient } from "../generated/prisma/index.js";
+import logger from "../src/common/utilities/logger/index.js";
 
-const prismaService = new PrismaClient();
+const prismaService = new PrismaClient({
+  log: ["query", "info", "warn", "error"],
+});
 
 export async function connectToDatabase() {
   try {
@@ -9,7 +11,8 @@ export async function connectToDatabase() {
     logger.debug("✅ Connected to database via Prisma");
   } catch (err) {
     logger.error("❌ Failed to connect to database:", err);
-    process.exit(1);
+    // Don't exit immediately, let the app try to start
+    // The health check will fail if the database is not available
   }
 }
 

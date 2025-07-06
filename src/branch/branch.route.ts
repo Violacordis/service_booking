@@ -1,8 +1,11 @@
 import { Router } from "express";
-import { createBranchSchema, getBranchesQuerySchema } from "./branch.validator";
-import { validate } from "../common/middleware/validate.middleware";
-import { BranchController } from "./branch.controller";
-import { authenticate } from "../common/middleware/authenticate.middleware";
+import {
+  createBranchSchema,
+  getBranchesQuerySchema,
+} from "./branch.validator.js";
+import { validate } from "../common/middleware/validate.middleware.js";
+import { BranchController } from "./branch.controller.js";
+import { authenticate } from "../common/middleware/authenticate.middleware.js";
 const router = Router();
 const controller = new BranchController();
 

@@ -135,10 +135,7 @@ model User {
   email         String                   @unique @db.VarChar(255)
   password      String                   @db.VarChar(255)    //optional for guests
   fullName      String                   @db.VarChar(255)
-  address       String?                  @db.VarChar(255) 
   phone         String?                  @unique @db.VarChar(50)
-  state         String?                  @db.VarChar(255)
-  country       String?                  @db.VarChar(255)
   status        Boolean                  @default(true)
   createdAt     DateTime                 @default(now()) @db.Timestamp(6)
   updatedAt     DateTime                 @default(now()) @updatedAt @db.Timestamp(6)
@@ -146,10 +143,26 @@ model User {
   appointments  Appointment[]
   cartItems     CartItem[]
   orders        Order[]
-
+  addresses     Address[]
 
   @@index([email])
   @@map("users")
+}
+
+model Address {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  address   String   @db.VarChar(255)
+  state     String?  @db.VarChar(255)
+  country   String?  @db.VarChar(255)
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(6)
+
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("addresses")
 }
 
 model Appointment {

@@ -1,14 +1,14 @@
 import { Router } from "express";
-import { validate } from "../common/middleware/validate.middleware";
-import { CartController } from "./cart.controller";
-import { authenticate } from "../common/middleware/authenticate.middleware";
+import { validate } from "../common/middleware/validate.middleware.js";
+import { CartController } from "./cart.controller.js";
+import { authenticate } from "../common/middleware/authenticate.middleware.js";
 import {
   AddToCartSchema,
   checkoutOrderSchema,
   getUserCartsSchema,
   updateCartItemBodySchema,
   updateCartItemParamSchema,
-} from "./cart.validator";
+} from "./cart.validator.js";
 const router = Router();
 const controller = new CartController();
 
