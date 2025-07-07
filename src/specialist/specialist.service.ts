@@ -217,9 +217,27 @@ export class SpecialistService {
         }),
       ]);
 
+      // Get total completed appointments for each specialist
+      const specialistsWithStats = await Promise.all(
+        specialists.map(async (specialist) => {
+          const totalCompletedAppointments =
+            await prismaService.appointment.count({
+              where: {
+                specialistId: specialist.id,
+                status: AppointmentStatus.COMPLETED,
+              },
+            });
+
+          return {
+            ...specialist,
+            totalCompletedAppointments,
+          };
+        })
+      );
+
       return {
         message: "Specialists fetched successfully",
-        data: specialists,
+        data: specialistsWithStats,
         meta: {
           total,
           page,
@@ -277,9 +295,22 @@ export class SpecialistService {
         throw new AppError("Specialist not found", 404);
       }
 
+      // Get total number of completed appointments for this specialist
+      const totalCompletedAppointments = await prismaService.appointment.count({
+        where: {
+          specialistId: specialistId,
+          status: AppointmentStatus.COMPLETED,
+        },
+      });
+
+      const specialistWithStats = {
+        ...specialist,
+        totalCompletedAppointments,
+      };
+
       return {
         message: "Specialist fetched successfully",
-        data: specialist,
+        data: specialistWithStats,
       };
     } catch (error: any) {
       logger.error("Error fetching specialist by ID:", error);
