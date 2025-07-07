@@ -350,24 +350,6 @@ export class AppointmentService {
         );
       }
 
-      // If the appointment was completed, we need to check if we should decrement client count
-      let shouldDecrementClientCount = false;
-      if (appointment.status === AppointmentStatus.COMPLETED) {
-        // Check if this client has other completed appointments with this specialist
-        const otherCompletedAppointments = await prisma.appointment.findFirst({
-          where: {
-            userId: appointment.userId,
-            specialistId: appointment.specialistId,
-            status: AppointmentStatus.COMPLETED,
-            id: { not: appointmentId },
-          },
-        });
-
-        // If no other completed appointments exist, this was their only completed appointment
-        // so we should decrement the client count
-        shouldDecrementClientCount = !otherCompletedAppointments;
-      }
-
       const updatedAppointment = await prisma.appointment.update({
         where: { id: appointmentId },
         data: {
@@ -376,22 +358,9 @@ export class AppointmentService {
         },
       });
 
-      // Decrement client count if this was their only completed appointment
-      if (shouldDecrementClientCount) {
-        await prisma.specialist.update({
-          where: { id: appointment.specialistId },
-          data: {
-            clientCount: {
-              decrement: 1,
-            },
-          },
-        });
-      }
-
       return {
         message: "Appointment cancelled successfully",
         data: updatedAppointment,
-        clientCountDecremented: shouldDecrementClientCount,
       };
     } catch (error) {
       logger.error("Error cancelling appointment:", error);
