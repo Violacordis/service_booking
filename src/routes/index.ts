@@ -11,6 +11,8 @@ import cartRoute from "../cart/cart.route.js";
 import orderRoutes from "../order/order.route.js";
 import addressRoutes from "../address/address.route.js";
 import uploadRoutes from "../upload/upload.route.js";
+import userRoutes from "../user/user.route.js";
+
 const router = Router();
 
 router.use("/auth", authRoutes);
@@ -26,6 +28,9 @@ router.use("/cart/items", authenticate, cartRoute);
 router.use("/orders", authenticate, orderRoutes);
 router.use("/addresses", authenticate, addressRoutes);
 router.use("/upload", uploadRoutes);
+
+// user management
+router.use("/users", userRoutes);
 
 router.get("/home", (_req, res) => {
   res.json({ status: "OK", message: "Welcome to my service booking API" });
