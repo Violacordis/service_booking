@@ -51,4 +51,21 @@ export class CoreServiceController {
 
     res.json(data);
   };
+
+  updateProductImage = async (req: Request, res: Response) => {
+    if (!req.file) {
+      throw new AppError("No image file provided", 400);
+    }
+
+    const productId = req.params.id;
+    if (!productId) {
+      throw new AppError("Product ID is required", 400);
+    }
+
+    const data = await this.productService.updateProductImage(
+      productId,
+      req.file.buffer
+    );
+    res.json(data);
+  };
 }

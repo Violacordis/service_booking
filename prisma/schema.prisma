@@ -99,6 +99,10 @@ model Specialist {
   state         String?                  @db.VarChar(255)
   country       String?                  @db.VarChar(255)
   description   String?                  @db.VarChar(255)
+  imageUrl      String?
+  rating        Float                    @default(0.0)  // Average rating from clients
+  totalRatings  Int                      @default(0)    // Number of ratings received from clients
+  clientCount   Int                      @default(0)    // Number of unique clients served
   status        Boolean                  @default(true)
   createdAt     DateTime                 @default(now()) @db.Timestamp(6)
   updatedAt     DateTime                 @default(now()) @updatedAt @db.Timestamp(6)
@@ -108,6 +112,7 @@ model Specialist {
   branch        Branch                   @relation(fields: [branchId], references: [id])
   specialties   SpecialistCategory[]
   appointments  Appointment[]
+  clientRatings SpecialistRating[]      // Ratings received from clients
 
  
   @@index([email])
@@ -144,6 +149,7 @@ model User {
   cartItems     CartItem[]
   orders        Order[]
   addresses     Address[]
+  specialistRatings SpecialistRating[]  // Ratings given by this client to specialists
 
   @@index([email])
   @@map("users")
@@ -186,6 +192,7 @@ model Appointment {
   branch           Branch                   @relation(fields: [branchId], references: [id])
   payment          Payment?
   services         AppointmentService[]
+  ratings          SpecialistRating[]
 
 
 
@@ -369,6 +376,27 @@ model OrderItem {
   @@index([orderId])
   @@index([productId])
   @@map("order_items")
+}
+
+model SpecialistRating {
+  id            String                   @id @default(uuid()) @db.Uuid
+  specialistId  String                   @db.Uuid
+  clientId      String                   @db.Uuid  // The user/client who is rating the specialist
+  appointmentId String?                  @db.Uuid
+  rating        Int                      // Rating from 1-5
+  comment       String?                  @db.VarChar(500)
+  createdAt     DateTime                 @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime                 @default(now()) @updatedAt @db.Timestamp(6)
+
+  specialist    Specialist               @relation(fields: [specialistId], references: [id])
+  client        User                     @relation(fields: [clientId], references: [id])  // The client who gave the rating
+  appointment   Appointment?             @relation(fields: [appointmentId], references: [id])
+
+  @@unique([specialistId, clientId, appointmentId])
+  @@index([specialistId])
+  @@index([clientId])
+  @@index([rating])
+  @@map("specialist_ratings")
 }
 
 

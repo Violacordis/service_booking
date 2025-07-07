@@ -114,4 +114,23 @@ export class AppointmentController {
 
     res.json(data);
   };
+
+  completeAppointment = async (req: Request, res: Response) => {
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new AppError("Unauthorized!", 401);
+    }
+
+    const appointmentId = req.params.id;
+    if (!appointmentId) {
+      throw new AppError("Appointment ID is required", 400);
+    }
+
+    const data = await this.appointmentService.completeAppointment(
+      appointmentId,
+      userId
+    );
+
+    res.json(data);
+  };
 }

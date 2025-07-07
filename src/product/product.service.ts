@@ -3,6 +3,7 @@ import { Currency } from "../../generated/prisma/index.js";
 import { AppError } from "../common/errors/app.error.js";
 import { generateShortCode } from "../common/utilities/app.utilities.js";
 import logger from "../common/utilities/logger/index.js";
+import { CloudinaryService } from "../common/cloudinary/index.js";
 
 export class ProductService {
   createProducts = async (
@@ -211,6 +212,79 @@ export class ProductService {
     } catch (error) {
       logger.error("Error fetching product by ID:", error);
       throw new AppError("Failed to fetch product", 500);
+    }
+  }
+
+  async updateProductImage(productId: string, imageBuffer: Buffer) {
+    try {
+      // Get the current product to check if it has an existing image
+      const product = await prismaService.productItem.findUnique({
+        where: { id: productId },
+        select: { imageUrl: true },
+      });
+
+      if (!product) {
+        throw new AppError("Product not found", 404);
+      }
+
+      // Extract public ID from existing image URL if it exists
+      let oldPublicId: string | undefined;
+      if (product.imageUrl) {
+        // Extract public ID from Cloudinary URL
+        const urlParts = product.imageUrl.split("/");
+        const filename = urlParts[urlParts.length - 1];
+        oldPublicId = filename.split(".")[0]; // Remove file extension
+      }
+
+      // Upload new image to Cloudinary
+      const uploadResult = await CloudinaryService.uploadImage(
+        imageBuffer,
+        "products",
+        {
+          width: 600,
+          height: 600,
+          crop: "fill",
+          quality: "auto",
+        }
+      );
+
+      // Update product with new image URL
+      const updatedProduct = await prismaService.productItem.update({
+        where: { id: productId },
+        data: { imageUrl: uploadResult.secure_url },
+        include: {
+          category: {
+            select: {
+              id: true,
+              name: true,
+              description: true,
+              code: true,
+            },
+          },
+        },
+      });
+
+      // Delete old image from Cloudinary if it exists
+      if (oldPublicId) {
+        try {
+          await CloudinaryService.deleteImage(oldPublicId);
+        } catch (error) {
+          logger.warn(
+            `Failed to delete old image ${oldPublicId}:${error.message}`
+          );
+        }
+      }
+
+      return {
+        message: "Product image updated successfully",
+        data: updatedProduct,
+      };
+    } catch (error: any) {
+      logger.error("Error updating product image:", error);
+      throw new AppError(
+        error.message || "Failed to update product image",
+        error.statusCode || 500
+      );
     }
   }
 }

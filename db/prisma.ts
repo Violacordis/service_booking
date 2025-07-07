@@ -1,4 +1,6 @@
 import { PrismaClient } from "../generated/prisma/index.js";
+// import { PrismaClient } from "@prisma/client";
+
 import logger from "../src/common/utilities/logger/index.js";
 
 const prismaService = new PrismaClient({

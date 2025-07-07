@@ -51,6 +51,11 @@ const config = {
     },
     mailFrom: env.require("DEFAULT_FROM_EMAIL", "support@nailer.com"),
   },
+  cloudinary: {
+    cloudName: env.require("CLOUDINARY_CLOUD_NAME"),
+    apiKey: env.require("CLOUDINARY_API_KEY"),
+    apiSecret: env.require("CLOUDINARY_API_SECRET"),
+  },
 };
 
 export default config;
