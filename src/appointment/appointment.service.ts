@@ -350,18 +350,99 @@ export class AppointmentService {
         );
       }
 
-      return prisma.appointment.update({
+      const updatedAppointment = await prisma.appointment.update({
         where: { id: appointmentId },
         data: {
           status: AppointmentStatus.CANCELLED,
           cancelReason: reason ?? null,
         },
       });
+
+      return {
+        message: "Appointment cancelled successfully",
+        data: updatedAppointment,
+      };
     } catch (error) {
       logger.error("Error cancelling appointment:", error);
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error";
       throw new AppError(`Failed to cancel appointment: ${errorMessage}`, 500);
+    }
+  }
+
+  async completeAppointment(appointmentId: string, userId: string) {
+    try {
+      const appointment = await prisma.appointment.findFirst({
+        where: {
+          id: appointmentId,
+          userId,
+          status: { not: AppointmentStatus.CANCELLED },
+        },
+        include: {
+          payment: {
+            select: {
+              status: true,
+            },
+          },
+        },
+      });
+
+      if (!appointment) {
+        throw new AppError("Appointment not found or already cancelled", 404);
+      }
+
+      if (appointment.status === AppointmentStatus.COMPLETED) {
+        throw new AppError("Appointment is already completed", 400);
+      }
+
+      // Check if appointment is paid
+      if (!appointment.payment || appointment.payment.status !== "SUCCESS") {
+        throw new AppError("Only paid appointments can be completed", 400);
+      }
+
+      // Check if this is the first time this client has completed an appointment with this specialist
+      const isFirstTimeClient = await prisma.appointment.findFirst({
+        where: {
+          userId: appointment.userId,
+          specialistId: appointment.specialistId,
+          status: AppointmentStatus.COMPLETED,
+          id: { not: appointmentId }, // Exclude current appointment
+        },
+      });
+
+      // Update appointment status
+      const updatedAppointment = await prisma.appointment.update({
+        where: { id: appointmentId },
+        data: {
+          status: AppointmentStatus.COMPLETED,
+        },
+      });
+
+      // If this is a new client for this specialist, increment the client count
+      if (!isFirstTimeClient) {
+        await prisma.specialist.update({
+          where: { id: appointment.specialistId },
+          data: {
+            clientCount: {
+              increment: 1,
+            },
+          },
+        });
+      }
+
+      return {
+        message: "Appointment completed successfully",
+        data: updatedAppointment,
+        isNewClient: !isFirstTimeClient,
+      };
+    } catch (error) {
+      logger.error("Error completing appointment:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      throw new AppError(
+        `Failed to complete appointment: ${errorMessage}`,
+        500
+      );
     }
   }
 }

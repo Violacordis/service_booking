@@ -10,6 +10,7 @@ import productRoutes from "../product/product.route.js";
 import cartRoute from "../cart/cart.route.js";
 import orderRoutes from "../order/order.route.js";
 import addressRoutes from "../address/address.route.js";
+import uploadRoutes from "../upload/upload.route.js";
 const router = Router();
 
 router.use("/auth", authRoutes);
@@ -24,6 +25,7 @@ router.use("/products", productRoutes);
 router.use("/cart/items", authenticate, cartRoute);
 router.use("/orders", authenticate, orderRoutes);
 router.use("/addresses", authenticate, addressRoutes);
+router.use("/upload", uploadRoutes);
 
 router.get("/home", (_req, res) => {
   res.json({ status: "OK", message: "Welcome to my service booking API" });

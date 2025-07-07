@@ -41,4 +41,10 @@ router.patch(
   controller.cancelAppointment
 );
 
+router.patch(
+  "/:id/complete",
+  validate({ params: cancelAppointmentParamSchema }),
+  controller.completeAppointment
+);
+
 export default router;

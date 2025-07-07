@@ -1,6 +1,8 @@
 import prismaService from "../../db/prisma.js";
 import { AppError } from "../common/errors/app.error.js";
 import logger from "../common/utilities/logger/index.js";
+import { CloudinaryService } from "../common/cloudinary/index.js";
+import { AppointmentStatus } from "../../generated/prisma/index.js";
 
 export class SpecialistService {
   async addSpecialists(
@@ -108,7 +110,9 @@ export class SpecialistService {
       status?: boolean;
       serviceCategoryId?: string;
       serviceId?: string;
+      minRating?: number;
       sortBy?: string;
+      sortOrder?: string;
     };
   }) {
     try {
@@ -120,7 +124,9 @@ export class SpecialistService {
         status,
         serviceCategoryId,
         serviceId,
+        minRating,
         sortBy = "createdAt",
+        sortOrder = "desc",
       } = req.query;
 
       const filters: any = {};
@@ -170,6 +176,13 @@ export class SpecialistService {
         };
       }
 
+      // Minimum rating filter
+      if (minRating !== undefined) {
+        filters.rating = {
+          gte: minRating,
+        };
+      }
+
       const [total, specialists] = await Promise.all([
         prismaService.specialist.count({ where: filters }),
         prismaService.specialist.findMany({
@@ -204,9 +217,27 @@ export class SpecialistService {
         }),
       ]);
 
+      // Get total completed appointments for each specialist
+      const specialistsWithStats = await Promise.all(
+        specialists.map(async (specialist) => {
+          const totalCompletedAppointments =
+            await prismaService.appointment.count({
+              where: {
+                specialistId: specialist.id,
+                status: AppointmentStatus.COMPLETED,
+              },
+            });
+
+          return {
+            ...specialist,
+            totalCompletedAppointments,
+          };
+        })
+      );
+
       return {
         message: "Specialists fetched successfully",
-        data: specialists,
+        data: specialistsWithStats,
         meta: {
           total,
           page,
@@ -217,6 +248,277 @@ export class SpecialistService {
     } catch (error: any) {
       logger.error("Error fetching specialists:", error);
       throw new AppError("Failed to fetch specialists", 500);
+    }
+  }
+
+  async getSpecialistById(specialistId: string) {
+    try {
+      const specialist = await prismaService.specialist.findUnique({
+        where: { id: specialistId },
+        include: {
+          branch: {
+            select: {
+              id: true,
+              name: true,
+              address: true,
+              city: true,
+              state: true,
+              country: true,
+            },
+          },
+          specialties: {
+            select: {
+              id: true,
+              category: {
+                select: {
+                  id: true,
+                  name: true,
+                  type: true,
+                  price: true,
+                  estimatedTime: true,
+                  service: {
+                    select: {
+                      id: true,
+                      name: true,
+                      description: true,
+                      branchId: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!specialist) {
+        throw new AppError("Specialist not found", 404);
+      }
+
+      // Get total number of completed appointments for this specialist
+      const totalCompletedAppointments = await prismaService.appointment.count({
+        where: {
+          specialistId: specialistId,
+          status: AppointmentStatus.COMPLETED,
+        },
+      });
+
+      const specialistWithStats = {
+        ...specialist,
+        totalCompletedAppointments,
+      };
+
+      return {
+        message: "Specialist fetched successfully",
+        data: specialistWithStats,
+      };
+    } catch (error: any) {
+      logger.error("Error fetching specialist by ID:", error);
+      if (error instanceof AppError) {
+        throw error;
+      }
+      throw new AppError("Failed to fetch specialist", 500);
+    }
+  }
+
+  async updateSpecialistImage(specialistId: string, imageBuffer: Buffer) {
+    try {
+      // Get the current specialist to check if they have an existing image
+      const specialist = await prismaService.specialist.findUnique({
+        where: { id: specialistId },
+        select: { imageUrl: true },
+      });
+
+      if (!specialist) {
+        throw new AppError("Specialist not found", 404);
+      }
+
+      // Extract public ID from existing image URL if it exists
+      let oldPublicId: string | undefined;
+      if (specialist.imageUrl) {
+        // Extract public ID from Cloudinary URL
+        const urlParts = specialist.imageUrl.split("/");
+        const filename = urlParts[urlParts.length - 1];
+        oldPublicId = filename.split(".")[0]; // Remove file extension
+      }
+
+      // Upload new image to Cloudinary
+      const uploadResult = await CloudinaryService.uploadImage(
+        imageBuffer,
+        "specialists",
+        {
+          width: 400,
+          height: 400,
+          crop: "fill",
+          gravity: "face",
+          quality: "auto",
+        }
+      );
+
+      // Update specialist with new image URL
+      const updatedSpecialist = await prismaService.specialist.update({
+        where: { id: specialistId },
+        data: { imageUrl: uploadResult.secure_url },
+        include: {
+          specialties: {
+            select: {
+              id: true,
+              category: {
+                select: {
+                  id: true,
+                  name: true,
+                  type: true,
+                  price: true,
+                  estimatedTime: true,
+                  service: {
+                    select: {
+                      id: true,
+                      name: true,
+                      description: true,
+                      branchId: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      // Delete old image from Cloudinary if it exists
+      if (oldPublicId) {
+        try {
+          await CloudinaryService.deleteImage(oldPublicId);
+        } catch (error) {
+          logger.warn(
+            `Failed to delete old image ${oldPublicId}:${error.message}`
+          );
+        }
+      }
+
+      return {
+        message: "Specialist image updated successfully",
+        data: updatedSpecialist,
+      };
+    } catch (error: any) {
+      logger.error("Error updating specialist image:", error);
+      throw new AppError(
+        error.message || "Failed to update specialist image",
+        error.statusCode || 500
+      );
+    }
+  }
+
+  async rateSpecialist(
+    specialistId: string,
+    clientId: string,
+    appointmentId: string,
+    rating: number,
+    comment?: string
+  ) {
+    try {
+      // Check if specialist exists
+      const specialist = await prismaService.specialist.findUnique({
+        where: { id: specialistId },
+      });
+
+      if (!specialist) {
+        throw new AppError("Specialist not found", 404);
+      }
+
+      // Check if client exists
+      const client = await prismaService.user.findUnique({
+        where: { id: clientId },
+      });
+
+      if (!client) {
+        throw new AppError("Client not found", 404);
+      }
+
+      // Validate appointment and check completion status
+      const appointment = await prismaService.appointment.findFirst({
+        where: {
+          id: appointmentId,
+          userId: clientId,
+          specialistId: specialistId,
+        },
+      });
+
+      if (!appointment) {
+        throw new AppError("Invalid appointment ID", 400);
+      }
+
+      // Check if appointment is completed
+      if (appointment.status !== AppointmentStatus.COMPLETED) {
+        throw new AppError(
+          "You can only rate a specialist after the appointment is completed",
+          400
+        );
+      }
+
+      // Check if rating already exists for this appointment
+      const existingRating = await prismaService.specialistRating.findUnique({
+        where: {
+          specialistId_clientId_appointmentId: {
+            specialistId,
+            clientId,
+            appointmentId,
+          },
+        },
+      });
+
+      if (existingRating) {
+        throw new AppError(
+          "You have already rated this specialist for this appointment",
+          409
+        );
+      }
+
+      // Create the rating
+      await prismaService.specialistRating.create({
+        data: {
+          specialistId,
+          clientId,
+          appointmentId,
+          rating,
+          comment,
+        },
+      });
+
+      // Update specialist's average rating and total ratings
+      const ratings = await prismaService.specialistRating.findMany({
+        where: { specialistId },
+        select: { rating: true },
+      });
+
+      const totalRatings = ratings.length;
+      const averageRating =
+        ratings.reduce((sum, r) => sum + r.rating, 0) / totalRatings;
+
+      // Update specialist (only rating metrics, not client count)
+      await prismaService.specialist.update({
+        where: { id: specialistId },
+        data: {
+          rating: averageRating,
+          totalRatings,
+        },
+      });
+
+      return {
+        message: "Specialist rated successfully",
+        data: {
+          rating,
+          comment,
+          averageRating,
+          totalRatings,
+        },
+      };
+    } catch (error: any) {
+      logger.error("Error rating specialist:", error);
+      if (error instanceof AppError) {
+        throw error;
+      }
+      throw new AppError("Failed to rate specialist", 500);
     }
   }
 }

@@ -85,4 +85,32 @@ const getSpecialistsQuerySchema = z.object({
   term: z.string().optional(),
 });
 
-export { createSpecialistsSchema, getSpecialistsQuerySchema };
+const getSpecialistByIdParamSchema = z.object({
+  id: z.string().uuid({ message: "Specialist ID must be a valid UUID" }),
+});
+
+const rateSpecialistParamSchema = z.object({
+  id: z.string().uuid({ message: "Specialist ID must be a valid UUID" }),
+});
+
+const rateSpecialistBodySchema = z.object({
+  rating: z
+    .number()
+    .min(1, { message: "Rating must be at least 1" })
+    .max(5, { message: "Rating cannot exceed 5" }),
+  comment: z
+    .string()
+    .max(500, { message: "Comment cannot exceed 500 characters" })
+    .optional(),
+  appointmentId: z
+    .string()
+    .uuid({ message: "Appointment ID must be a valid UUID" }),
+});
+
+export {
+  createSpecialistsSchema,
+  getSpecialistsQuerySchema,
+  getSpecialistByIdParamSchema,
+  rateSpecialistParamSchema,
+  rateSpecialistBodySchema,
+};

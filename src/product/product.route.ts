@@ -8,6 +8,10 @@ import {
   getProductItemParamSchemaWithUserId,
   getProductsQuerySchema,
 } from "./product.validator.js";
+import {
+  uploadSingleImage,
+  validateImageUpload,
+} from "../common/middleware/upload.middleware.js";
 const router = Router();
 const controller = new CoreServiceController();
 
@@ -18,13 +22,11 @@ router.post(
 );
 router.get(
   "/",
-  authenticate,
   validate({ query: getProductsQuerySchema }),
   controller.getProducts
 );
 router.get(
   "/categories",
-  authenticate,
   validate({ query: getProductCategoriesQuerySchema }),
   controller.getProductcategories
 );
@@ -34,6 +36,13 @@ router.get(
   authenticate,
   validate({ params: getProductItemParamSchemaWithUserId }),
   controller.getProductsById
+);
+
+router.put(
+  "/:id/image",
+  uploadSingleImage,
+  validateImageUpload,
+  controller.updateProductImage
 );
 
 export default router;
