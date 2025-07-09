@@ -1,5 +1,5 @@
 import express from "express";
-
+import cors from "cors";
 import errorHandler from "./common/middleware/error.middleware.js";
 import routes from "./routes/index.js";
 import webhookRoutes from "./webhook/webhook.route.js";
@@ -13,6 +13,13 @@ import prisma from "../db/prisma.js";
 
 const app = express();
 app.use("/webhook", webhookRoutes);
+
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
 
 app.use(express.json({ strict: true, limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
