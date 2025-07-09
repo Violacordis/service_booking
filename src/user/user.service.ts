@@ -151,15 +151,15 @@ export class UserService {
       }
 
       // Check if phone is being updated and if it's already taken by another user
-      if (phone && phone !== existingUser.phone) {
-        const phoneExists = await prisma.user.findUnique({
-          where: { phone },
-        });
+      // if (phone && phone !== existingUser.phone) {
+      //   const phoneExists = await prisma.user.findUnique({
+      //     where: { phone },
+      //   });
 
-        if (phoneExists) {
-          throw new AppError("Phone number is already in use", 409);
-        }
-      }
+      //   if (phoneExists) {
+      //     throw new AppError("Phone number is already in use", 409);
+      //   }
+      // }
 
       // Prepare update data
       const updateData: any = {};
