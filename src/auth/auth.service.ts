@@ -81,9 +81,8 @@ export class AuthService {
     const save = await redis.set(
       `FORGOT_PASS_${token}`,
       JSON.stringify({ token, email, userId: user.id }),
-      "EX",
-      1800
-    ); // 30 minutes
+      { ex: 1800 } // 30 minutes
+    );
 
     await emailService.sendEmail({
       to: user.email,
@@ -112,7 +111,7 @@ export class AuthService {
       throw new AppError("OTP expired or invalid", 400);
     }
 
-    const cachedData = JSON.parse(cachedOtp);
+    const cachedData = JSON.parse(cachedOtp as string);
 
     const user = await prisma.user.findUnique({
       where: { id: cachedData.userId },
