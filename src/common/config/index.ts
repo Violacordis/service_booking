@@ -35,6 +35,8 @@ const config = {
   redis: {
     host: env("REDIS_HOST", "localhost"),
     port: Number(env("REDIS_PORT", 6379)),
+    restUrl: env.require("REDIS_REST_URL"),
+    restToken: env.require("REDIS_REST_TOKEN"),
   },
   stripe: {
     secretKey: env.require("STRIPE_SECRET_KEY"),

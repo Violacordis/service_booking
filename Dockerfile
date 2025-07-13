@@ -21,6 +21,8 @@ RUN npx prisma generate
 RUN npm run build
 # Copy generated Prisma client to dist for runtime access
 RUN cp -r generated dist/
+# Ensure templates are copied
+RUN cp -r src/templates dist/src/
 
 # Production image, copy all the files and run the app
 FROM base AS runner
@@ -37,6 +39,7 @@ COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nodejs:nodejs /app/package.json ./package.json
 COPY --from=builder --chown=nodejs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nodejs:nodejs /app/generated ./generated
+# Templates are already copied during build process
 
 # Ensure Prisma client is available
 RUN npx prisma generate
