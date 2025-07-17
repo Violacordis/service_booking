@@ -7,6 +7,7 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:migrate:deploy": "prisma migrate deploy",
+    "fly:deploy": "fly deploy",
     "dev": "tsx watch src/server.ts",
     "build": "tsc && cp -r src/templates dist/src/",
     "start": "node dist/src/server.js"
