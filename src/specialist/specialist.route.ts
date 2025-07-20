@@ -25,14 +25,12 @@ router.post(
 );
 router.get(
   "/",
-  authenticate,
   validate({ query: getSpecialistsQuerySchema }),
   controller.getSpecialists
 );
 
 router.get(
   "/:id",
-  authenticate,
   validate({ params: getSpecialistByIdParamSchema }),
   controller.getSpecialistById
 );

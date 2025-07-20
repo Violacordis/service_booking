@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { validate } from "../common/middleware/validate.middleware.js";
 import { CoreServiceController } from "./product.controller.js";
-import { authenticate } from "../common/middleware/authenticate.middleware.js";
 import {
   createProductsSchema,
   getProductCategoriesQuerySchema,
@@ -33,7 +32,6 @@ router.get(
 
 router.get(
   "/:id",
-  authenticate,
   validate({ params: getProductItemParamSchemaWithUserId }),
   controller.getProductsById
 );

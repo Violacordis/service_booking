@@ -37,11 +37,6 @@ export class CoreServiceController {
   };
 
   getProductsById = async (req: Request, res: Response) => {
-    const userId = req.user?.id;
-    if (!userId) {
-      throw new AppError("Unauthorized!", 401);
-    }
-
     const productId = req.params.id;
     if (!productId) {
       throw new AppError("Product item ID is required", 400);

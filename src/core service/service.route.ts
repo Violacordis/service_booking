@@ -5,7 +5,6 @@ import {
   createServicesSchema,
   getServicesQuerySchema,
 } from "./service.validator.js";
-import { authenticate } from "../common/middleware/authenticate.middleware.js";
 const router = Router();
 const controller = new CoreServiceController();
 
@@ -16,7 +15,6 @@ router.post(
 );
 router.get(
   "/",
-  authenticate,
   validate({ query: getServicesQuerySchema }),
   controller.getServices
 );

@@ -4,6 +4,8 @@ import { OrderStatus } from "../../generated/prisma/index.js";
 const AddToCartSchema = z.object({
   productId: z.string().uuid({ message: "Product ID must be a valid UUID" }),
   quantity: z.number().int().min(1, { message: "Quantity must be at least 1" }),
+  guestId: z.string().uuid().optional(),
+  userId: z.string().uuid().optional(),
 });
 
 const getUserCartsSchema = z.object({
@@ -31,6 +33,8 @@ const getUserCartsSchema = z.object({
     .default("createdAt"),
 
   term: z.string().optional(),
+  guestId: z.string().uuid().optional(),
+  userId: z.string().uuid().optional(),
 });
 
 const getUserOrdersSchema = z.object({
@@ -73,6 +77,8 @@ const updateCartItemParamSchema = z.object({
 
 const updateCartItemBodySchema = z.object({
   quantity: z.number().int().min(1, { message: "Quantity must be at least 1" }),
+  guestId: z.string().uuid().optional(),
+  userId: z.string().uuid().optional(),
 });
 
 const checkoutOrderSchema = z.object({
@@ -88,6 +94,10 @@ const checkoutOrderSchema = z.object({
   note: z.string().optional(),
 });
 
+const MergeCartSchema = z.object({
+  guestId: z.string().uuid({ message: "guestId must be a valid UUID" }),
+});
+
 export {
   AddToCartSchema,
   getUserCartsSchema,
@@ -95,4 +105,5 @@ export {
   updateCartItemBodySchema,
   checkoutOrderSchema,
   getUserOrdersSchema,
+  MergeCartSchema,
 };
