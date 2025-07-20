@@ -8,31 +8,35 @@ import {
   getUserCartsSchema,
   updateCartItemBodySchema,
   updateCartItemParamSchema,
+  MergeCartSchema,
 } from "./cart.validator.js";
 const router = Router();
 const controller = new CartController();
 
+router.post("/add", validate({ body: AddToCartSchema }), controller.addToCart);
+
 router.post(
-  "/add",
+  "/merge",
   authenticate,
-  validate({ body: AddToCartSchema }),
-  controller.addToCart
+  validate({ body: MergeCartSchema }),
+  controller.mergeGuestCart
 );
+
 router.post(
   "/checkout",
   authenticate,
   validate({ body: checkoutOrderSchema }),
   controller.checkoutCart
 );
+
 router.get(
   "/",
-  authenticate,
   validate({ query: getUserCartsSchema }),
   controller.getUserCartItems
 );
+
 router.patch(
   "/:id/quantity",
-  authenticate,
   validate({
     params: updateCartItemParamSchema,
     body: updateCartItemBodySchema,
@@ -42,11 +46,10 @@ router.patch(
 
 router.delete(
   "/:id/remove",
-  authenticate,
   validate({ params: updateCartItemParamSchema }),
   controller.removeCartItem
 );
 
-router.delete("/clear", authenticate, controller.clearUserCart);
+router.delete("/clear", controller.clearUserCart);
 
 export default router;

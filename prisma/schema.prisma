@@ -322,22 +322,25 @@ model ProductItem {
 
 model CartItem {
   id            String       @id @default(uuid()) @db.Uuid
-  userId        String       @db.Uuid
+  userId        String?      @db.Uuid
+  guestId       String?      // for guests, e.g. a UUID from frontend
   productId     String       @db.Uuid
-  quantity      Int          @default(1)   
+  quantity      Int          @default(1)
   createdAt     DateTime     @default(now()) @db.Timestamp(6)
   updatedAt     DateTime     @default(now()) @updatedAt @db.Timestamp(6)
 
   productItem   ProductItem  @relation(fields: [productId], references: [id])
-  user          User         @relation(fields: [userId], references: [id])
+  user          User?        @relation(fields: [userId], references: [id])
 
   @@index([userId])
+  @@index([guestId])
   @@index([productId])
   @@unique([userId, productId])
+  @@unique([guestId, productId])
   @@map("cart_items")
-  }
+}
 
-  model Order {
+model Order {
   id          String       @id @default(uuid()) @db.Uuid
   userId      String       @db.Uuid
   totalAmount Float

@@ -24,7 +24,7 @@ router.use("/make-payment", authenticate, paymentRoutes);
 
 // shop products
 router.use("/products", productRoutes);
-router.use("/cart/items", authenticate, cartRoute);
+router.use("/cart/items", cartRoute);
 router.use("/orders", authenticate, orderRoutes);
 router.use("/addresses", authenticate, addressRoutes);
 router.use("/upload", uploadRoutes);

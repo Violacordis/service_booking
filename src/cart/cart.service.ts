@@ -5,39 +5,43 @@ import { generateShortCode } from "../common/utilities/app.utilities.js";
 import logger from "../common/utilities/logger/index.js";
 
 export class CartService {
-  addToCart = async (id: string, quantity: number, userId: string) => {
+  addToCart = async (
+    id: string,
+    quantity: number,
+    userId?: string,
+    guestId?: string
+  ) => {
     try {
+      if (!userId && !guestId)
+        throw new AppError("Missing user or guest identifier", 400);
+
+      // Build the unique constraint for either user or guest
+      const where = userId
+        ? { userId_productId: { userId, productId: id } }
+        : { guestId_productId: { guestId, productId: id } };
+
       const existingCartItem = await prismaService.cartItem.findUnique({
-        where: {
-          userId_productId: {
-            userId,
-            productId: id,
-          },
-        },
+        where,
       });
 
-      const cartItem = existingCartItem
-        ? await prismaService.cartItem.update({
-            where: {
-              userId_productId: {
-                userId,
-                productId: id,
-              },
-            },
-            data: {
-              quantity: existingCartItem.quantity + quantity,
-            },
-          })
-        : await prismaService.cartItem.create({
-            data: {
-              userId,
-              productId: id,
-              quantity,
-            },
-            include: {
-              productItem: true,
-            },
-          });
+      let cartItem;
+      if (existingCartItem) {
+        cartItem = await prismaService.cartItem.update({
+          where,
+          data: { quantity: existingCartItem.quantity + quantity },
+          include: { productItem: true },
+        });
+      } else {
+        cartItem = await prismaService.cartItem.create({
+          data: {
+            ...(userId && { userId }),
+            ...(guestId && { guestId }),
+            productId: id,
+            quantity,
+          },
+          include: { productItem: true },
+        });
+      }
 
       return {
         message: "Item added to cart successfully",
@@ -49,27 +53,24 @@ export class CartService {
     }
   };
 
-  removeFromCart = async (id: string, userId: string) => {
+  removeFromCart = async (id: string, userId?: string, guestId?: string) => {
     try {
       const cartItem = await prismaService.cartItem.findUnique({
-        where: {
-          id,
-        },
+        where: { id },
       });
-
       if (!cartItem) {
         throw new AppError("Cart item not found", 404);
       }
-
-      await prismaService.cartItem.delete({
-        where: {
-          id,
-        },
-      });
-
-      return {
-        message: "Item removed from cart successfully",
-      };
+      // Only allow removal if the item belongs to the user or guest
+      if (
+        (userId && cartItem.userId === userId) ||
+        (guestId && cartItem.guestId === guestId)
+      ) {
+        await prismaService.cartItem.delete({ where: { id } });
+        return { message: "Item removed from cart successfully" };
+      } else {
+        throw new AppError("Unauthorized to remove this cart item", 403);
+      }
     } catch (error: any) {
       logger.error("Error removing item from cart:", error);
       throw new AppError("Failed to remove item from cart!", 500);
@@ -77,6 +78,8 @@ export class CartService {
   };
 
   getUserCartItems = async (req: {
+    userId?: string;
+    guestId?: string;
     query: {
       page?: 1 | undefined;
       limit?: 10 | undefined;
@@ -86,9 +89,10 @@ export class CartService {
   }) => {
     try {
       const { page = 1, limit = 10, term, sortBy = "createdAt" } = req.query;
-
       const filters: any = {};
-
+      if (req.userId) filters.userId = req.userId;
+      else if (req.guestId) filters.guestId = req.guestId;
+      else throw new AppError("Missing user or guest identifier", 400);
       if (term) {
         const searchTerm = term.toString().trim();
         filters.OR = [
@@ -99,7 +103,6 @@ export class CartService {
           },
         ];
       }
-
       const [total, items] = await Promise.all([
         prismaService.cartItem.count({ where: filters }),
         prismaService.cartItem.findMany({
@@ -107,14 +110,11 @@ export class CartService {
           skip: (Number(page) - 1) * Number(limit),
           take: Number(limit),
           orderBy: { [sortBy.toString()]: "desc" },
-          include: {
-            productItem: true,
-          },
+          include: { productItem: true },
         }),
       ]);
-
       return {
-        message: "User Cart Items fetched successfully",
+        message: "Cart Items fetched successfully",
         data: items,
         meta: {
           total,
@@ -124,8 +124,8 @@ export class CartService {
         },
       };
     } catch (error: any) {
-      logger.error("Error fetching user cart items:", error);
-      throw new AppError("Failed to fetch user cart items!", 500);
+      logger.error("Error fetching cart items:", error);
+      throw new AppError("Failed to fetch cart items!", 500);
     }
   };
 
@@ -186,52 +186,48 @@ export class CartService {
   updateCartItemQuantity = async (
     id: string,
     quantity: number,
-    userId: string
+    userId?: string,
+    guestId?: string
   ) => {
     try {
       const cartItem = await prismaService.cartItem.findUnique({
-        where: {
-          id,
-        },
+        where: { id },
       });
-
       if (!cartItem) {
         throw new AppError("Cart item not found", 404);
       }
-
-      const updatedCartItem = await prismaService.cartItem.update({
-        where: {
-          id,
-        },
-        data: {
-          quantity,
-        },
-      });
-
-      return {
-        message: "Cart item quantity updated successfully",
-        data: updatedCartItem,
-      };
+      // Only allow update if the item belongs to the user or guest
+      if (
+        (userId && cartItem.userId === userId) ||
+        (guestId && cartItem.guestId === guestId)
+      ) {
+        const updatedCartItem = await prismaService.cartItem.update({
+          where: { id },
+          data: { quantity },
+        });
+        return {
+          message: "Cart item quantity updated successfully",
+          data: updatedCartItem,
+        };
+      } else {
+        throw new AppError("Unauthorized to update this cart item", 403);
+      }
     } catch (error: any) {
       logger.error("Error updating cart item quantity:", error);
       throw new AppError("Failed to update cart item quantity!", 500);
     }
   };
 
-  clearUserCart = async (userId: string) => {
+  clearUserCart = async (userId?: string, guestId?: string) => {
     try {
-      await prismaService.cartItem.deleteMany({
-        where: {
-          userId,
-        },
-      });
-
-      return {
-        message: "User cart cleared successfully",
-      };
+      if (!userId && !guestId)
+        throw new AppError("Missing user or guest identifier", 400);
+      const where: any = userId ? { userId } : { guestId };
+      await prismaService.cartItem.deleteMany({ where });
+      return { message: "Cart cleared successfully" };
     } catch (error: any) {
-      logger.error("Error clearing user cart:", error);
-      throw new AppError("Failed to clear user cart!", 500);
+      logger.error("Error clearing cart:", error);
+      throw new AppError("Failed to clear cart!", 500);
     }
   };
 
@@ -297,5 +293,34 @@ export class CartService {
       message: "Order created. Proceed to payment.",
       data: order,
     };
+  };
+
+  // Merge guest cart into user cart
+  mergeGuestCartToUserCart = async (userId: string, guestId: string) => {
+    const guestCartItems = await prismaService.cartItem.findMany({
+      where: { guestId },
+    });
+
+    for (const guestItem of guestCartItems) {
+      const userCartItem = await prismaService.cartItem.findUnique({
+        where: { userId_productId: { userId, productId: guestItem.productId } },
+      });
+
+      if (userCartItem) {
+        await prismaService.cartItem.update({
+          where: {
+            userId_productId: { userId, productId: guestItem.productId },
+          },
+          data: { quantity: userCartItem.quantity + guestItem.quantity },
+        });
+        await prismaService.cartItem.delete({ where: { id: guestItem.id } });
+      } else {
+        await prismaService.cartItem.update({
+          where: { id: guestItem.id },
+          data: { userId, guestId: null },
+        });
+      }
+    }
+    return { message: "Guest cart merged into user cart successfully" };
   };
 }

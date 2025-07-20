@@ -12,18 +12,19 @@ export class CartController {
 
   addToCart = async (req: Request, res: Response) => {
     const validated = AddToCartSchema.parse(req.body);
-
-    const userId = req.user?.id;
-    if (!userId) {
-      throw new AppError("Unauthorized!", 401);
+    const userId =
+      typeof req.body.userId === "string" ? req.body.userId : undefined;
+    const guestId =
+      typeof req.body.guestId === "string" ? req.body.guestId : undefined;
+    if (!userId && !guestId) {
+      throw new AppError("Missing user or guest identifier", 400);
     }
-
     const data = await this.cartService.addToCart(
       validated.productId,
       validated.quantity,
-      userId
+      userId,
+      guestId
     );
-
     res.json(data);
   };
 
@@ -47,7 +48,16 @@ export class CartController {
   };
 
   getUserCartItems = async (req: Request, res: Response) => {
+    const userId =
+      typeof req.query.userId === "string" ? req.query.userId : undefined;
+    const guestId =
+      typeof req.query.guestId === "string" ? req.query.guestId : undefined;
+    if (!userId && !guestId) {
+      throw new AppError("Missing user or guest identifier", 400);
+    }
     const data = await this.cartService.getUserCartItems({
+      userId,
+      guestId,
       query: (req as any).validated.query,
     });
     res.json(data);
@@ -55,41 +65,67 @@ export class CartController {
 
   removeCartItem = async (req: Request, res: Response) => {
     const cartItemId = req.params.id;
-    const userId = req.user?.id;
-    if (!userId) {
-      throw new AppError("Unauthorized!", 401);
+    const userId =
+      typeof req.body.userId === "string" ? req.body.userId : undefined;
+    const guestId =
+      typeof req.body.guestId === "string" ? req.body.guestId : undefined;
+    if (!userId && !guestId) {
+      throw new AppError("Missing user or guest identifier", 400);
     }
-
-    const data = await this.cartService.removeFromCart(cartItemId, userId);
-
+    const data = await this.cartService.removeFromCart(
+      cartItemId,
+      userId,
+      guestId
+    );
     res.json(data);
   };
 
   updateCartItemQuantity = async (req: Request, res: Response) => {
     const cartItemId = req.params.id;
-    const userId = req.user?.id;
-    if (!userId) {
-      throw new AppError("Unauthorized!", 401);
+    const userId =
+      typeof req.body.userId === "string" ? req.body.userId : undefined;
+    const guestId =
+      typeof req.body.guestId === "string" ? req.body.guestId : undefined;
+    if (!userId && !guestId) {
+      throw new AppError("Missing user or guest identifier", 400);
     }
-
     const validated = updateCartItemBodySchema.parse(req.body);
     const data = await this.cartService.updateCartItemQuantity(
       cartItemId,
       validated.quantity,
-      userId
+      userId,
+      guestId
     );
-
     res.json(data);
   };
 
   clearUserCart = async (req: Request, res: Response) => {
-    const userId = req.user?.id;
-    if (!userId) {
-      throw new AppError("Unauthorized!", 401);
+    const userId =
+      typeof req.body.userId === "string" ? req.body.userId : undefined;
+    const guestId =
+      typeof req.body.guestId === "string" ? req.body.guestId : undefined;
+    if (!userId && !guestId) {
+      throw new AppError("Missing user or guest identifier", 400);
     }
-
-    const data = await this.cartService.clearUserCart(userId);
-
+    const data = await this.cartService.clearUserCart(userId, guestId);
     res.json(data);
+  };
+
+  mergeGuestCart = async (req: Request, res: Response) => {
+    const userId = typeof req.user?.id === "string" ? req.user.id : undefined;
+    const guestId =
+      typeof req.body.guestId === "string"
+        ? req.body.guestId
+        : typeof req.query.guestId === "string"
+        ? req.query.guestId
+        : undefined;
+    if (!userId || !guestId) {
+      throw new AppError("Missing user or guest identifier", 400);
+    }
+    const result = await this.cartService.mergeGuestCartToUserCart(
+      userId,
+      guestId
+    );
+    res.json(result);
   };
 }

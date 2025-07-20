@@ -5,7 +5,6 @@ import {
 } from "./branch.validator.js";
 import { validate } from "../common/middleware/validate.middleware.js";
 import { BranchController } from "./branch.controller.js";
-import { authenticate } from "../common/middleware/authenticate.middleware.js";
 const router = Router();
 const controller = new BranchController();
 
@@ -16,7 +15,6 @@ router.post(
 );
 router.get(
   "/",
-  authenticate,
   validate({ query: getBranchesQuerySchema }),
   controller.fetchBranches
 );
