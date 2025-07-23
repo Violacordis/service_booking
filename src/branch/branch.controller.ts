@@ -23,4 +23,15 @@ export class BranchController {
     });
     res.json(data);
   };
+
+  deleteBranches = async (req: Request, res: Response) => {
+    const validated = (req as any).validated.body;
+    const data = await this.branchService.deleteBranches(validated.branchIds);
+    res.json(data);
+  };
+
+  clearAllBranches = async (req: Request, res: Response) => {
+    const data = await this.branchService.clearAllBranches();
+    res.json(data);
+  };
 }

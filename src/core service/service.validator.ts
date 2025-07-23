@@ -64,4 +64,17 @@ const getServicesQuerySchema = z.object({
   term: z.string().optional(),
 });
 
-export { createServicesSchema, getServicesQuerySchema };
+const deleteServicesSchema = z.object({
+  serviceIds: z
+    .array(z.string().uuid({ message: "Each service ID must be a valid UUID" }))
+    .min(1, "At least one service ID is required"),
+});
+
+const clearAllServicesSchema = z.object({});
+
+export {
+  createServicesSchema,
+  getServicesQuerySchema,
+  deleteServicesSchema,
+  clearAllServicesSchema,
+};

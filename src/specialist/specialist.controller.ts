@@ -62,4 +62,17 @@ export class SpecialistController {
     );
     res.json(data);
   };
+
+  deleteSpecialists = async (req: Request, res: Response) => {
+    const validated = (req as any).validated.body;
+    const data = await this.specialistService.deleteSpecialists(
+      validated.specialistIds
+    );
+    res.json(data);
+  };
+
+  clearAllSpecialists = async (req: Request, res: Response) => {
+    const data = await this.specialistService.clearAllSpecialists();
+    res.json(data);
+  };
 }

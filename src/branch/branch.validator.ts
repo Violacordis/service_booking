@@ -32,4 +32,17 @@ const getBranchesQuerySchema = z.object({
   ),
 });
 
-export { createBranchSchema, getBranchesQuerySchema };
+const deleteBranchesSchema = z.object({
+  branchIds: z
+    .array(z.string().uuid({ message: "Each branch ID must be a valid UUID" }))
+    .min(1, "At least one branch ID is required"),
+});
+
+const clearAllBranchesSchema = z.object({});
+
+export {
+  createBranchSchema,
+  getBranchesQuerySchema,
+  deleteBranchesSchema,
+  clearAllBranchesSchema,
+};

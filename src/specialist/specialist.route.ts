@@ -7,6 +7,8 @@ import {
   getSpecialistByIdParamSchema,
   rateSpecialistParamSchema,
   rateSpecialistBodySchema,
+  deleteSpecialistsSchema,
+  clearAllSpecialistsSchema,
 } from "./specialist.validator.js";
 import { authenticate } from "../common/middleware/authenticate.middleware.js";
 import {
@@ -50,6 +52,18 @@ router.put(
   uploadSingleImage,
   validateImageUpload,
   controller.updateSpecialistImage
+);
+
+router.delete(
+  "/",
+  validate({ body: deleteSpecialistsSchema }),
+  controller.deleteSpecialists
+);
+
+router.delete(
+  "/clear-all",
+  validate({ body: clearAllSpecialistsSchema }),
+  controller.clearAllSpecialists
 );
 
 export default router;

@@ -107,10 +107,22 @@ const rateSpecialistBodySchema = z.object({
     .uuid({ message: "Appointment ID must be a valid UUID" }),
 });
 
+const deleteSpecialistsSchema = z.object({
+  specialistIds: z
+    .array(
+      z.string().uuid({ message: "Each specialist ID must be a valid UUID" })
+    )
+    .min(1, "At least one specialist ID is required"),
+});
+
+const clearAllSpecialistsSchema = z.object({});
+
 export {
   createSpecialistsSchema,
   getSpecialistsQuerySchema,
   getSpecialistByIdParamSchema,
   rateSpecialistParamSchema,
   rateSpecialistBodySchema,
+  deleteSpecialistsSchema,
+  clearAllSpecialistsSchema,
 };

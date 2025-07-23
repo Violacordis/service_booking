@@ -104,4 +104,107 @@ export class BranchService {
       throw new AppError("Failed to fetch branches!", 500);
     }
   }
+
+  async deleteBranches(branchIds: string[]) {
+    if (!Array.isArray(branchIds)) {
+      throw new AppError("Invalid request: 'branchIds' must be an array", 400);
+    }
+
+    try {
+      await prismaService.appointmentServiceCategory.deleteMany({
+        where: {
+          category: {
+            service: {
+              branchId: { in: branchIds },
+            },
+          },
+        },
+      });
+
+      await prismaService.appointmentService.deleteMany({
+        where: {
+          appointment: {
+            branchId: { in: branchIds },
+          },
+        },
+      });
+
+      await prismaService.specialistCategory.deleteMany({
+        where: {
+          category: {
+            service: {
+              branchId: { in: branchIds },
+            },
+          },
+        },
+      });
+
+      await prismaService.serviceCategory.deleteMany({
+        where: {
+          service: {
+            branchId: { in: branchIds },
+          },
+        },
+      });
+
+      await prismaService.specialistRating.deleteMany({
+        where: {
+          specialist: {
+            branchId: { in: branchIds },
+          },
+        },
+      });
+
+      await prismaService.appointment.deleteMany({
+        where: { branchId: { in: branchIds } },
+      });
+
+      await prismaService.specialist.deleteMany({
+        where: { branchId: { in: branchIds } },
+      });
+
+      await prismaService.service.deleteMany({
+        where: { branchId: { in: branchIds } },
+      });
+
+      const deletedBranches = await prismaService.branch.deleteMany({
+        where: { id: { in: branchIds } },
+      });
+
+      return {
+        message: `${deletedBranches.count} branch(es) deleted successfully`,
+        data: { deletedCount: deletedBranches.count },
+      };
+    } catch (error: any) {
+      logger.error("Error deleting branches:", error);
+      if (error instanceof AppError) {
+        throw error;
+      }
+      throw new AppError("Failed to delete branches!", 500);
+    }
+  }
+
+  async clearAllBranches() {
+    try {
+      await prismaService.appointmentServiceCategory.deleteMany({});
+      await prismaService.appointmentService.deleteMany({});
+      await prismaService.specialistCategory.deleteMany({});
+      await prismaService.serviceCategory.deleteMany({});
+      await prismaService.specialistRating.deleteMany({});
+
+      await prismaService.appointment.deleteMany({});
+      await prismaService.specialist.deleteMany({});
+
+      await prismaService.service.deleteMany({});
+      const deletedBranches = await prismaService.branch.deleteMany({});
+
+      return {
+        message: `All branches (${deletedBranches.count}) deleted successfully`,
+        data: { deletedCount: deletedBranches.count },
+      };
+    } catch (error: any) {
+      logger.error("Error clearing all branches:", error);
+      throw new AppError("Failed to clear all branches!", 500);
+    }
+  }
 }

@@ -521,4 +521,77 @@ export class SpecialistService {
       throw new AppError("Failed to rate specialist", 500);
     }
   }
+
+  async deleteSpecialists(specialistIds: string[]) {
+    if (!Array.isArray(specialistIds)) {
+      throw new AppError(
+        "Invalid request: 'specialistIds' must be an array",
+        400
+      );
+    }
+
+    try {
+      await prismaService.appointmentServiceCategory.deleteMany({
+        where: {
+          appointmentService: {
+            appointment: {
+              specialistId: { in: specialistIds },
+            },
+          },
+        },
+      });
+      await prismaService.appointmentService.deleteMany({
+        where: {
+          appointment: {
+            specialistId: { in: specialistIds },
+          },
+        },
+      });
+
+      await prismaService.specialistCategory.deleteMany({
+        where: { specialistId: { in: specialistIds } },
+      });
+
+      await prismaService.specialistRating.deleteMany({
+        where: { specialistId: { in: specialistIds } },
+      });
+      await prismaService.appointment.deleteMany({
+        where: { specialistId: { in: specialistIds } },
+      });
+
+      const deletedSpecialists = await prismaService.specialist.deleteMany({
+        where: { id: { in: specialistIds } },
+      });
+
+      return {
+        message: `${deletedSpecialists.count} specialist(s) deleted successfully`,
+        data: { deletedCount: deletedSpecialists.count },
+      };
+    } catch (error: any) {
+      logger.error("Error deleting specialists:", error);
+      if (error instanceof AppError) {
+        throw error;
+      }
+      throw new AppError("Failed to delete specialists!", 500);
+    }
+  }
+
+  async clearAllSpecialists() {
+    try {
+      await prismaService.appointmentServiceCategory.deleteMany({});
+      await prismaService.appointmentService.deleteMany({});
+      await prismaService.specialistCategory.deleteMany({});
+      await prismaService.specialistRating.deleteMany({});
+      await prismaService.appointment.deleteMany({});
+      const deletedSpecialists = await prismaService.specialist.deleteMany({});
+
+      return {
+        message: `All specialists (${deletedSpecialists.count}) deleted successfully`,
+        data: { deletedCount: deletedSpecialists.count },
+      };
+    } catch (error: any) {
+      logger.error("Error clearing all specialists:", error);
+      throw new AppError("Failed to clear all specialists!", 500);
+    }
+  }
 }
