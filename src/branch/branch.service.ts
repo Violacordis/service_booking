@@ -111,8 +111,6 @@ export class BranchService {
     }
 
     try {
-      // Delete in order to handle foreign key constraints
-      // 1. Delete appointment service categories for services in these branches
       await prismaService.appointmentServiceCategory.deleteMany({
         where: {
           category: {
@@ -123,7 +121,6 @@ export class BranchService {
         },
       });
 
-      // 2. Delete appointment services for appointments in these branches
       await prismaService.appointmentService.deleteMany({
         where: {
           appointment: {
@@ -132,7 +129,6 @@ export class BranchService {
         },
       });
 
-      // 3. Delete specialist categories for services in these branches
       await prismaService.specialistCategory.deleteMany({
         where: {
           category: {
