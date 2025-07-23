@@ -28,4 +28,15 @@ export class CoreServiceController {
     });
     res.json(data);
   };
+
+  deleteServices = async (req: Request, res: Response) => {
+    const validated = (req as any).validated.body;
+    const data = await this.coreService.deleteServices(validated.serviceIds);
+    res.json(data);
+  };
+
+  clearAllServices = async (req: Request, res: Response) => {
+    const data = await this.coreService.clearAllServices();
+    res.json(data);
+  };
 }

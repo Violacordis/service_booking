@@ -162,4 +162,63 @@ export class CoreService {
       throw new AppError("Failed to fetch services!", 500);
     }
   };
+
+  deleteServices = async (serviceIds: string[]) => {
+    try {
+      await prismaService.appointmentServiceCategory.deleteMany({
+        where: {
+          category: {
+            serviceId: { in: serviceIds },
+          },
+        },
+      });
+
+      await prismaService.specialistCategory.deleteMany({
+        where: {
+          category: {
+            serviceId: { in: serviceIds },
+          },
+        },
+      });
+
+      await prismaService.serviceCategory.deleteMany({
+        where: { serviceId: { in: serviceIds } },
+      });
+
+      const deletedServices = await prismaService.service.deleteMany({
+        where: { id: { in: serviceIds } },
+      });
+
+      return {
+        message: `${deletedServices.count} service(s) deleted successfully`,
+        data: { deletedCount: deletedServices.count },
+      };
+    } catch (error: any) {
+      logger.error("Error deleting services:", error);
+      if (error instanceof AppError) {
+        throw error;
+      }
+      throw new AppError("Failed to delete services!", 500);
+    }
+  };
+
+  clearAllServices = async () => {
+    try {
+      await prismaService.appointmentServiceCategory.deleteMany({});
+
+      await prismaService.specialistCategory.deleteMany({});
+
+      await prismaService.serviceCategory.deleteMany({});
+
+      const deletedServices = await prismaService.service.deleteMany({});
+
+      return {
+        message: `All services (${deletedServices.count}) deleted successfully`,
+        data: { deletedCount: deletedServices.count },
+      };
+    } catch (error: any) {
+      logger.error("Error clearing all services:", error);
+      throw new AppError("Failed to clear all services!", 500);
+    }
+  };
 }
