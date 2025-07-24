@@ -62,7 +62,7 @@ export class OrderService {
           take: Number(limit),
           orderBy: { [sortBy.toString()]: "desc" },
           include: {
-            items: true,
+            items: { include: { product: true } },
           },
         }),
       ]);
@@ -91,7 +91,7 @@ export class OrderService {
           userId,
         },
         include: {
-          items: true,
+          items: { include: { product: true } },
           user: {
             select: {
               fullName: true,
