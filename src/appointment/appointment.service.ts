@@ -282,7 +282,24 @@ export class AppointmentService {
         include: {
           services: {
             include: {
-              service: { select: { name: true, id: true, description: true } },
+              service: {
+                select: {
+                  name: true,
+                  id: true,
+                  description: true,
+                  categories: {
+                    select: {
+                      id: true,
+                      serviceId: true,
+                      name: true,
+                      description: true,
+                      type: true,
+                      price: true,
+                      estimatedTime: true,
+                    },
+                  },
+                },
+              },
             },
           },
           specialist: {
@@ -291,6 +308,7 @@ export class AppointmentService {
               name: true,
               email: true,
               phone: true,
+              imageUrl: true,
             },
           },
           branch: {
