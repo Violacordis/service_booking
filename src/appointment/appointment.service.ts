@@ -214,9 +214,31 @@ export class AppointmentService {
           orderBy: { [sortBy]: "desc" },
           include: {
             services: {
-              include: {
+              select: {
                 service: {
-                  select: { name: true, id: true, description: true },
+                  select: { id: true, name: true, description: true },
+                },
+                categories: {
+                  select: {
+                    id: true,
+                    appointmentServiceId: true,
+                    category: {
+                      select: {
+                        name: true,
+                        description: true,
+                        type: true,
+                        price: true,
+                        estimatedTime: true,
+                        service: {
+                          select: {
+                            id: true,
+                            name: true,
+                            description: true,
+                          },
+                        },
+                      },
+                    },
+                  },
                 },
               },
             },
@@ -281,21 +303,28 @@ export class AppointmentService {
         },
         include: {
           services: {
-            include: {
+            select: {
               service: {
+                select: { id: true, name: true, description: true },
+              },
+              categories: {
                 select: {
-                  name: true,
                   id: true,
-                  description: true,
-                  categories: {
+                  appointmentServiceId: true,
+                  category: {
                     select: {
-                      id: true,
-                      serviceId: true,
                       name: true,
                       description: true,
                       type: true,
                       price: true,
                       estimatedTime: true,
+                      service: {
+                        select: {
+                          id: true,
+                          name: true,
+                          description: true,
+                        },
+                      },
                     },
                   },
                 },
