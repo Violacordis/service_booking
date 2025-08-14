@@ -30,3 +30,35 @@ export const authenticate = (
     throw new AppError("Unauthorized!", 401);
   }
 };
+
+export const optionalAuth = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader?.startsWith("Bearer ")) {
+    // No token provided, continue without authentication
+    req.user = undefined;
+    return next();
+  }
+
+  const token = authHeader.split(" ")[1];
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET as string) as {
+      userId: string;
+      email: string;
+    };
+
+    req.user = {
+      id: payload.userId,
+      email: payload.email,
+    };
+    next();
+  } catch (error) {
+    logger.warn(`Invalid token in optional auth: ${error}`);
+    // Invalid token, continue without authentication
+    req.user = undefined;
+    next();
+  }
+};
