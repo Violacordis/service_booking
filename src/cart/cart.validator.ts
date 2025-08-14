@@ -76,7 +76,10 @@ const updateCartItemParamSchema = z.object({
 });
 
 const updateCartItemBodySchema = z.object({
-  quantity: z.number().int().min(1, { message: "Quantity must be at least 1" }),
+  quantity: z
+    .number()
+    .int()
+    .positive({ message: "quantity must be a positive integer" }),
   guestId: z.string().uuid().optional(),
   userId: z.string().uuid().optional(),
 });
@@ -98,6 +101,10 @@ const MergeCartSchema = z.object({
   guestId: z.string().uuid({ message: "guestId must be a valid UUID" }),
 });
 
+const clearCartSchema = z.object({
+  guestId: z.string().uuid().optional(), // Only needed for guests
+});
+
 export {
   AddToCartSchema,
   getUserCartsSchema,
@@ -106,4 +113,5 @@ export {
   checkoutOrderSchema,
   getUserOrdersSchema,
   MergeCartSchema,
+  clearCartSchema,
 };

@@ -4,6 +4,7 @@ import {
   AddToCartSchema,
   checkoutOrderSchema,
   updateCartItemBodySchema,
+  clearCartSchema,
 } from "./cart.validator.js";
 import { CartService } from "./cart.service.js";
 
@@ -12,13 +13,14 @@ export class CartController {
 
   addToCart = async (req: Request, res: Response) => {
     const validated = AddToCartSchema.parse(req.body);
-    const userId =
-      typeof req.body.userId === "string" ? req.body.userId : undefined;
-    const guestId =
-      typeof req.body.guestId === "string" ? req.body.guestId : undefined;
+    // Prioritize authenticated user, fall back to body/query for guests
+    const userId = req.user?.id || validated.userId;
+    const guestId = validated.guestId;
+
     if (!userId && !guestId) {
       throw new AppError("Missing user or guest identifier", 400);
     }
+
     const data = await this.cartService.addToCart(
       validated.productId,
       validated.quantity,
@@ -48,13 +50,14 @@ export class CartController {
   };
 
   getUserCartItems = async (req: Request, res: Response) => {
-    const userId =
-      typeof req.query.userId === "string" ? req.query.userId : undefined;
-    const guestId =
-      typeof req.query.guestId === "string" ? req.query.guestId : undefined;
+    // Prioritize authenticated user, fall back to query for guests
+    const userId = req.user?.id || (req.query.userId as string);
+    const guestId = req.query.guestId as string;
+
     if (!userId && !guestId) {
       throw new AppError("Missing user or guest identifier", 400);
     }
+
     const data = await this.cartService.getUserCartItems({
       userId,
       guestId,
@@ -65,13 +68,14 @@ export class CartController {
 
   removeCartItem = async (req: Request, res: Response) => {
     const cartItemId = req.params.id;
-    const userId =
-      typeof req.body.userId === "string" ? req.body.userId : undefined;
-    const guestId =
-      typeof req.body.guestId === "string" ? req.body.guestId : undefined;
+    // Prioritize authenticated user, fall back to body for guests
+    const userId = req.user?.id || (req.body.userId as string);
+    const guestId = req.body.guestId;
+
     if (!userId && !guestId) {
       throw new AppError("Missing user or guest identifier", 400);
     }
+
     const data = await this.cartService.removeFromCart(
       cartItemId,
       userId,
@@ -82,14 +86,15 @@ export class CartController {
 
   updateCartItemQuantity = async (req: Request, res: Response) => {
     const cartItemId = req.params.id;
-    const userId =
-      typeof req.body.userId === "string" ? req.body.userId : undefined;
-    const guestId =
-      typeof req.body.guestId === "string" ? req.body.guestId : undefined;
+    const validated = updateCartItemBodySchema.parse(req.body);
+    // Prioritize authenticated user, fall back to body for guests
+    const userId = req.user?.id || validated.userId;
+    const guestId = validated.guestId;
+
     if (!userId && !guestId) {
       throw new AppError("Missing user or guest identifier", 400);
     }
-    const validated = updateCartItemBodySchema.parse(req.body);
+
     const data = await this.cartService.updateCartItemQuantity(
       cartItemId,
       validated.quantity,
@@ -100,13 +105,21 @@ export class CartController {
   };
 
   clearUserCart = async (req: Request, res: Response) => {
-    const userId =
-      typeof req.body.userId === "string" ? req.body.userId : undefined;
-    const guestId =
-      typeof req.body.guestId === "string" ? req.body.guestId : undefined;
+    const userId = req.user?.id;
+    let guestId: string | undefined;
+
+    // Only validate body if it exists (for guests)
+    if (req.body && Object.keys(req.body).length > 0) {
+      const validated = clearCartSchema.parse(req.body);
+      guestId = validated?.guestId;
+    }
+
+    // For authenticated users, no guestId needed
+    // For guests, guestId is required
     if (!userId && !guestId) {
       throw new AppError("Missing user or guest identifier", 400);
     }
+
     const data = await this.cartService.clearUserCart(userId, guestId);
     res.json(data);
   };
