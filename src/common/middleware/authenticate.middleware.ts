@@ -57,7 +57,6 @@ export const optionalAuth = (
     next();
   } catch (error) {
     logger.warn(`Invalid token in optional auth: ${error}`);
-    // Invalid token, continue without authentication
     req.user = undefined;
     next();
   }
